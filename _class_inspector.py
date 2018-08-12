@@ -5,9 +5,10 @@ from typing import Dict, Pattern, Match, Optional
 
 from _comment_handler import CommentHandler
 from regex import as_comment_regex, find_attribute_regex
+from singleton import Singleton
 
 
-class ClassInspector(object):
+class ClassInspector(object, metaclass=Singleton):
 
     def inspect_class(self, _class) -> Dict[str, Dict]:
         source = inspect.getsource(_class)

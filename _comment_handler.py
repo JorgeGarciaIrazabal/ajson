@@ -1,7 +1,8 @@
 from regex import as_comment_regex
+from singleton import Singleton
 
 
-class CommentHandler(object):
+class CommentHandler(object, metaclass=Singleton):
     def format_class_source(self, source: str) -> str:
         single = source.find("'''")
         double = source.find('"""')

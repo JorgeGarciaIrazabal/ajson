@@ -6,7 +6,7 @@ from _comment_handler import CommentHandler
 
 class TestCommentHandler(unittest.TestCase):
     def test_clears_single_comments(self):
-        class B:
+        class CHB:
             def __init__(self):
                 self.a = 2
                 '''
@@ -17,9 +17,9 @@ class TestCommentHandler(unittest.TestCase):
                     another test
                 '''
 
-        cleared_class = CommentHandler().format_class_source(inspect.getsource(B))
+        cleared_class = CommentHandler().format_class_source(inspect.getsource(CHB))
 
-        self.assertEqual(cleared_class, """        class B:
+        self.assertEqual(cleared_class, """        class CHB:
             def __init__(self):
                 self.a = 2
                 
@@ -27,7 +27,7 @@ class TestCommentHandler(unittest.TestCase):
                 \n""")
 
     def test_clears_double_comments(self):
-        class C:
+        class CHC:
             def __init__(self):
                 self.a = 3
                 """
@@ -38,9 +38,9 @@ class TestCommentHandler(unittest.TestCase):
                     another test
                 """
 
-        cleared_class = CommentHandler().format_class_source(inspect.getsource(C))
+        cleared_class = CommentHandler().format_class_source(inspect.getsource(CHC))
 
-        self.assertEqual(cleared_class, """        class C:
+        self.assertEqual(cleared_class, """        class CHC:
             def __init__(self):
                 self.a = 3
                 
@@ -48,23 +48,23 @@ class TestCommentHandler(unittest.TestCase):
                 \n""")
 
     def test_move_as_comment_to_inline_in_single(self):
-        class D:
+        class CHD:
             def __init__(self):
                 self.a = 4
                 '''
                     @as{"group": 2}
                 '''
 
-        cleared_class = CommentHandler().format_class_source(inspect.getsource(D))
+        cleared_class = CommentHandler().format_class_source(inspect.getsource(CHD))
 
-        self.assertEqual(cleared_class, """        class D:
+        self.assertEqual(cleared_class, """        class CHD:
             def __init__(self):
                 self.a = 4  # @as{"group": 2}
                 
 """)
 
     def test_complex_case(self):
-        class E:
+        class CHE:
             def __init__(self):
                 self.a = 4
                 '''
@@ -77,9 +77,9 @@ class TestCommentHandler(unittest.TestCase):
                     __example__ @as{"group": 2}
                 """
 
-        cleared_class = CommentHandler().format_class_source(inspect.getsource(E))
+        cleared_class = CommentHandler().format_class_source(inspect.getsource(CHE))
 
-        self.assertEqual(cleared_class, """        class E:
+        self.assertEqual(cleared_class, """        class CHE:
             def __init__(self):
                 self.a = 4  # @as{"group": 0}
                 
