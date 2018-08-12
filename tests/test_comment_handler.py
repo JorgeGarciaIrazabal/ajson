@@ -70,7 +70,7 @@ class TestCommentHandler(unittest.TestCase):
                 '''
                     @as{"group": 0}
                 '''
-                self.b = 8  # type: List[int] @as{"group": 1}
+                self.b = 8  # ANOTHER TEST @as{"group": 1}
                 self.c = self.b
                 """
                     this is a comment and then we have the as_comment 
@@ -78,13 +78,12 @@ class TestCommentHandler(unittest.TestCase):
                 """
 
         cleared_class = CommentHandler().format_class_source(inspect.getsource(E))
-        print(cleared_class)
 
         self.assertEqual(cleared_class, """        class E:
             def __init__(self):
                 self.a = 4  # @as{"group": 0}
                 
-                self.b = 8  # type: List[int] @as{"group": 1}
+                self.b = 8  # ANOTHER TEST @as{"group": 1}
                 self.c = self.b  # @as{"group": 2}
                 
 """)
