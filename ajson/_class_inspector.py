@@ -1,11 +1,10 @@
 import inspect
 import json
-import re
-from typing import Dict, Pattern, Match, Optional
+from typing import Dict, Match, Optional
 
-from _comment_handler import CommentHandler
-from regex import as_comment_regex, find_attribute_regex
-from singleton import Singleton
+from ajson._comment_handler import CommentHandler
+from ajson.regex import as_comment_regex, find_attribute_regex
+from ajson.singleton import Singleton
 
 
 class ClassInspector(object, metaclass=Singleton):

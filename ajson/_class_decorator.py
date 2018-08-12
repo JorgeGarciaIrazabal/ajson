@@ -1,5 +1,5 @@
-from _class_inspector import ClassInspector
-from _json_class_reports import JsonClassReports
+from ajson._class_inspector import ClassInspector
+from ajson._json_class_reports import JsonClassReports
 
 
 def AJson(cls: type):

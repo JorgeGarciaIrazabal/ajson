@@ -1,7 +1,7 @@
 import unittest
 
-from _class_decorator import AJson
-from _json_class_reports import JsonClassReports
+from ajson._class_decorator import AJson
+from ajson._json_class_reports import JsonClassReports
 
 
 class TestAJsonDecorator(unittest.TestCase):

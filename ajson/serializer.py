@@ -4,7 +4,7 @@ from datetime import datetime
 import collections
 from typing import Optional, List
 
-from _json_class_reports import JsonClassReports
+from ajson._json_class_reports import JsonClassReports
 
 
 class Serializer:

@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional, Set
 
-from singleton import Singleton
+from ajson.singleton import Singleton
 
 
 class _AttrReport(object):
