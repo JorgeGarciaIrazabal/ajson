@@ -17,10 +17,10 @@ class TestAJsonDecorator(unittest.TestCase):
         reports = JsonClassReports().reports
         self.assertIn(AJDA, reports)
         self.assertEqual(len(reports.keys()), 1)
-        self.assertEqual(reports[AJDA]["a"].groups, ["admin"])
-        self.assertIsNone(reports[AJDA]["a"].float_format)
-        self.assertIsNone(reports[AJDA]["a"].datetime_format)
-        self.assertEqual(reports[AJDA]["a"].name, "a")
+        self.assertEqual(reports[AJDA].get("a").groups, {"admin"})
+        self.assertIsNone(reports[AJDA].get("a").float_format)
+        self.assertIsNone(reports[AJDA].get("a").datetime_format)
+        self.assertEqual(reports[AJDA].get("a").name, "a")
 
     def test_annotation_class_creates_report_with_group_and_name(self):
         @AJson
@@ -30,9 +30,9 @@ class TestAJsonDecorator(unittest.TestCase):
 
         reports = JsonClassReports().reports
         self.assertIn(AJDB, reports)
-        self.assertIsNone(reports[AJDB]["a"].float_format)
-        self.assertIsNone(reports[AJDB]["a"].datetime_format)
-        self.assertEqual(reports[AJDB]["a"].name, "annotation")
+        self.assertIsNone(reports[AJDB].get("a").float_format)
+        self.assertIsNone(reports[AJDB].get("a").datetime_format)
+        self.assertEqual(reports[AJDB].get("a").name, "annotation")
 
     def test_annotation_class_creates_report_all_parameters(self):
         @AJson
@@ -53,7 +53,7 @@ class TestAJsonDecorator(unittest.TestCase):
 
         reports = JsonClassReports().reports
         self.assertIn(AJDC, reports)
-        self.assertEqual(reports[AJDC]["a"].groups, ["admin", "public"])
-        self.assertEqual(reports[AJDC]["a"].datetime_format, "Y-M-D")
-        self.assertEqual(reports[AJDC]["a"].float_format, ".2f")
-        self.assertEqual(reports[AJDC]["a"].name, "annotation")
+        self.assertEqual(reports[AJDC].get("a").groups, {"admin", "public"})
+        self.assertEqual(reports[AJDC].get("a").datetime_format, "Y-M-D")
+        self.assertEqual(reports[AJDC].get("a").float_format, ".2f")
+        self.assertEqual(reports[AJDC].get("a").name, "annotation")
