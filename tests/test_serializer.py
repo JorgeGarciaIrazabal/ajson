@@ -2,9 +2,9 @@ from datetime import timedelta, datetime
 import json
 import unittest
 
-from ajson.class_decorator import AJson
-from ajson.json_class_reports import JsonClassReports, ISO_FORMAT
-from ajson.serializer import Serializer
+from src.class_decorator import AJson
+from src.json_class_reports import JsonClassReports, ISO_FORMAT
+from src.serializer import Serializer
 
 
 class TestSerialization(unittest.TestCase):

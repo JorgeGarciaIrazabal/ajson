@@ -4,7 +4,7 @@ from datetime import datetime
 import collections
 from typing import Optional, List, Dict, Callable, Any, NewType
 
-from ajson.json_class_reports import JsonClassReports, _ClassReport, _AttrReport
+from src.json_class_reports import JsonClassReports, _ClassReport, _AttrReport
 
 Groups = NewType("Groups", Optional[List[str]])
 Handler = NewType("Handler", Callable[[Any, Groups, _AttrReport], Any])

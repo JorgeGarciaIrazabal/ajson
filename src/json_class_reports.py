@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional, Set
 
-from ajson.singleton import Singleton
+from src.singleton import Singleton
 
 ISO_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 

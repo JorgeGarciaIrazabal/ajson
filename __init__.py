@@ -1,2 +1,2 @@
-from ajson.serializer import Serializer
-from ajson.class_decorator import AJson
+from src.serializer import Serializer
+from src.class_decorator import AJson

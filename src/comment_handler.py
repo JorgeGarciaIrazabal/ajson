@@ -1,5 +1,5 @@
-from ajson.regex import as_comment_regex
-from ajson.singleton import Singleton
+from src.regex import as_comment_regex
+from src.singleton import Singleton
 
 
 class CommentHandler(object, metaclass=Singleton):

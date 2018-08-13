@@ -3,9 +3,9 @@ import json
 import logging
 from typing import Dict, Match, Optional
 
-from ajson.comment_handler import CommentHandler
-from ajson.regex import as_comment_regex, find_attribute_regex
-from ajson.singleton import Singleton
+from src.comment_handler import CommentHandler
+from src.regex import as_comment_regex, find_attribute_regex
+from src.singleton import Singleton
 
 
 class ClassInspector(object, metaclass=Singleton):
