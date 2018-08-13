@@ -2,3 +2,4 @@
 .idea
 .coverage
 coverage.xml
+*.egg-info

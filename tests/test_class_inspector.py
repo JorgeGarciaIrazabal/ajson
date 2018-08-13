@@ -1,6 +1,6 @@
 import unittest
 
-from ajson._class_inspector import ClassInspector
+from ajson.class_inspector import ClassInspector
 
 
 class TestClassInspector(unittest.TestCase):
@@ -34,4 +34,39 @@ class TestClassInspector(unittest.TestCase):
         self.assertEqual(len(report.keys()), 1)
         self.assertDictEqual(report, {
             "a": {"groups": [1, 2, 3]}
+        })
+
+    def test_json_error_just_ignores_that_attibute(self):
+        class CIC:
+            def __init__(self):
+                self.a = 10
+                '''
+                    @as{
+                        "groups: [
+                            1,
+                        ]
+                    }
+                '''
+                self.b = 1  # @as{"name": "test"}
+
+        report = ClassInspector().inspect_class(CIC)
+        self.assertEqual(len(report.keys()), 1)
+        self.assertDictEqual(report, {
+            "b": {"name": "test"}
+        })
+
+    def test_annotation_without_attribute_is_ignore(self):
+        class CID:
+            def __init__(self):
+                '''
+                    @as{
+                        "groups":  1
+                    }
+                '''
+                self.b = 6  # @as{"name": "test"}
+
+        report = ClassInspector().inspect_class(CID)
+        self.assertEqual(len(report.keys()), 1)
+        self.assertDictEqual(report, {
+            "b": {"name": "test"}
         })

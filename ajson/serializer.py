@@ -2,36 +2,38 @@ import json
 from datetime import datetime
 
 import collections
-from typing import Optional, List
+from typing import Optional, List, Dict, Callable, Any, NewType
 
-from ajson._json_class_reports import JsonClassReports
+from ajson.json_class_reports import JsonClassReports, _ClassReport, _AttrReport
+
+Groups = NewType("Groups", Optional[List[str]])
+Handler = NewType("Handler", Callable[[Any, Groups, _AttrReport], Any])
 
 
 class Serializer:
-    handlers = {}
-    DATE_TAME_KEY = "__date_time__"
-    __epoch = datetime.utcfromtimestamp(0)
-
     def __init__(self, max_depth=15):
-        self.max_depth = max_depth
+        self.max_depth: int = max_depth
+        self._handlers: Dict[type, Handler] = {}
+
+    def add_handler(self, _class: type, handler: Handler):
+        self._handlers[_class] = handler
 
     def serialize(self, obj, groups: Optional[List[str]] = None):
         return json.dumps(self.to_dict(obj, groups, 0))
 
-    def to_dict(self, obj, groups: Optional[List[str]] = None, _depth=0):
-        handled_types = self.handlers.keys()
+    def to_dict(self, obj, groups: Optional[List[str]] = None, _depth=0, attr_report: _AttrReport = None):
         _depth += 1
         if _depth > self.max_depth:
             return "..."
-        for class_ in handled_types:
+        for class_ in self._handlers:
             if isinstance(obj, class_):
-                return self.to_dict(self.handlers[class_](obj, _depth), groups, _depth)
+                return self.to_dict(self._handlers[class_](obj, groups, attr_report), groups, _depth)
         if obj is None:
             return None
         elif isinstance(obj, (int, str, float)):
             return obj
         elif isinstance(obj, datetime):
-            return self.__datetime_handler(obj)
+            return self.__datetime_handler(obj, attr_report)
         elif isinstance(obj, (list, tuple, set)):
             return self.__list_handler(obj, _depth)
         elif isinstance(obj, dict):
@@ -46,15 +48,22 @@ class Serializer:
             serialized_list.append(self.to_dict(item, depth))
         return serialized_list
 
-    def __dict_handler(self, obj: dict, groups: Optional[List[str]], depth):
+    def __dict_handler(self, obj: dict, groups: Optional[List[str]], depth,
+                       class_report: Optional[_ClassReport] = None):
         serialized_dict = {}
         for key, value in obj.items():
-            serialized_dict[key] = self.to_dict(value, groups, depth)
+            if class_report is None:
+                attr_report = None
+            else:
+                attr_report = class_report.get(key)
+            serialized_dict[key] = self.to_dict(value, groups, depth, attr_report)
         return serialized_dict
 
-    def __datetime_handler(self, obj: datetime):
-        time_stamp = (obj - self.__epoch).total_seconds() * 1000.0
-        return {self.DATE_TAME_KEY: int(time_stamp)}
+    def __datetime_handler(self, obj: datetime, attr_report: Optional[_AttrReport] = None) -> str:
+        if attr_report is None:
+            return obj.isoformat()
+
+        return obj.strftime(attr_report.datetime_format)
 
     def __object_handler(self, obj: object, groups: Optional[List[str]], depth):
         attributes = {key: value for key, value in obj.__dict__.items()
@@ -66,16 +75,16 @@ class Serializer:
         attributes_to_serialize = class_report.get_attribute_names(groups)
 
         attributes = {key: val for key, val in attributes.items() if key in attributes_to_serialize}
-        return self.__dict_handler(attributes, groups, depth)
+        return self.__dict_handler(attributes, groups, depth, class_report)
 
     def unserialize(self, message_str):
-        return self.__unjsonize(json.loads(message_str))
+        return self.from_dict(json.loads(message_str))
 
-    def __unjsonize(self, obj):
+    def from_dict(self, obj):
         if isinstance(obj, (list, tuple, set)):
-            return [self.__unjsonize(item) for item in obj]
+            return [self.from_dict(item) for item in obj]
         elif isinstance(obj, dict):
             if self.DATE_TAME_KEY in obj:
                 return datetime.utcfromtimestamp(obj[self.DATE_TAME_KEY]/1000.0)
-            return {key: self.__unjsonize(item) for key, item in obj.items()}
+            return {key: self.from_dict(item) for key, item in obj.items()}
         return obj

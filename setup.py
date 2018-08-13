@@ -25,13 +25,12 @@ setup(
     name='ajson',
     version='0.1.0',
 
-    description='simple serialized based on annotations',
+    description='simple serializer based on annotations',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/JorgeGarciaIrazabal/WSHubsAPI.git',
+    url='https://github.com/JorgeGarciaIrazabal/ajson.git',
 
-    # Author details
     author='Jorge Garcia Irazabal',
     author_email='jorge.girazabal@gmail.com',
 
@@ -50,18 +49,8 @@ setup(
         'License :: OSI Approved :: GNU Version 3',
         'Programming Language :: Python :: 3.6',
     ],
-
-    # What does your project relate to?
     keywords='json serializer annotation',
-
-    # You can just specify the packages manually here if your project is
-    # simple. Or you can use find_packages().
     packages=find_packages(exclude="_static"),
-
-    # List run-time dependencies here.  These will be installed by pip when
-    # your project is installed. For an analysis of "install_requires" vs pip's
-    # requirements files see:
-    # https://packaging.python.org/en/latest/requirements.html
     install_requires=[],
     test_suite="tests",
 )

@@ -1,8 +1,9 @@
 import inspect
 import json
+import logging
 from typing import Dict, Match, Optional
 
-from ajson._comment_handler import CommentHandler
+from ajson.comment_handler import CommentHandler
 from ajson.regex import as_comment_regex, find_attribute_regex
 from ajson.singleton import Singleton
 
@@ -29,8 +30,7 @@ class ClassInspector(object, metaclass=Singleton):
                 if attribute is not None:
                     report[attribute] = as_params_dict
             except Exception as e:
-                # todo handle this exception
-                print(e)
+                logging.warn("Unable to parse json {}".format(matches[0]))
             source = source[matches.end():]
         return report
 
