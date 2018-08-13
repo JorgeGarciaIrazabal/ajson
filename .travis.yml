@@ -1,0 +1,11 @@
+language: python
+python:
+- "3.6"
+# command to install dependencies
+install:
+- pip install coverage
+- pip install codecov
+script:
+- coverage run setup.py test
+after_success:
+- codecov
