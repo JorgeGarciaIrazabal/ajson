@@ -1,6 +1,6 @@
 import unittest
 
-from src.class_inspector import ClassInspector
+from ajson.class_inspector import ClassInspector
 
 
 class TestClassInspector(unittest.TestCase):

@@ -1,7 +1,7 @@
 import inspect
 import unittest
 
-from src.comment_handler import CommentHandler
+from ajson.comment_handler import CommentHandler
 
 
 class TestCommentHandler(unittest.TestCase):

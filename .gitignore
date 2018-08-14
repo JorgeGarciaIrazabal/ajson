@@ -3,3 +3,6 @@
 .coverage
 coverage.xml
 *.egg-info
+.pypirc
+build/
+dist/
