@@ -23,7 +23,7 @@ except:
 
 setup(
     name='ajson',
-    version='0.1.1',
+    version='0.2.0',
 
     description='simple serializer based on annotations',
     long_description=long_description,

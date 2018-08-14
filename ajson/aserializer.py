@@ -10,7 +10,7 @@ Groups = NewType("Groups", Optional[List[str]])
 Handler = NewType("Handler", Callable[[Any, Groups, _AttrReport], Any])
 
 
-class Serializer:
+class ASerializer:
     def __init__(self, max_depth=15):
         self.max_depth: int = max_depth
         self._handlers: Dict[type, Handler] = {}

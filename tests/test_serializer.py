@@ -4,13 +4,13 @@ import unittest
 
 from ajson.class_decorator import AJson
 from ajson.json_class_reports import JsonClassReports, ISO_FORMAT
-from ajson.serializer import Serializer
+from ajson.aserializer import ASerializer
 
 
 class TestSerialization(unittest.TestCase):
     # Test with AJson decoration
     def setUp(self):
-        self.serializer = Serializer()
+        self.serializer = ASerializer()
         JsonClassReports().clear()
 
     def test_basic_object_serialization(self):
@@ -83,7 +83,7 @@ class TestSerialization(unittest.TestCase):
         @AJson
         class SSimpleObjectAJson(object):
             def __init__(self):
-                self.a = 1  # @as{}
+                self.a = 1  # @aj{}
                 self.b = 1
 
         serialization = self.serializer.serialize(SSimpleObjectAJson())
@@ -94,8 +94,8 @@ class TestSerialization(unittest.TestCase):
         @AJson
         class SSimpleObjectAJsonWithGroups(object):
             def __init__(self):
-                self.a = 1  # @as{"groups": ["admin"]}
-                self.b = 2  # @as{"groups": ["public"]}
+                self.a = 1  # @aj{"groups": ["admin"]}
+                self.b = 2  # @aj{"groups": ["public"]}
 
         serialization = self.serializer.serialize(SSimpleObjectAJsonWithGroups(), groups=["admin"])
         self.assertEqual(len(json.loads(serialization).keys()), 1)
@@ -109,14 +109,14 @@ class TestSerialization(unittest.TestCase):
         @AJson
         class SSimpleObjectAJsonNested1(object):
             def __init__(self):
-                self.a = 1  # @as{"groups": ["admin"]}
-                self.b = 2  # @as{"groups": ["public"]}
+                self.a = 1  # @aj{"groups": ["admin"]}
+                self.b = 2  # @aj{"groups": ["public"]}
 
         @AJson
         class SSimpleObjectAJsonNested2(object):
             def __init__(self):
-                self.nested1 = SSimpleObjectAJsonNested1()  # @as{"groups": ["admin"]}
-                self.nested2 = SSimpleObjectAJsonNested1()  # @as{"groups": ["public"]}
+                self.nested1 = SSimpleObjectAJsonNested1()  # @aj{"groups": ["admin"]}
+                self.nested2 = SSimpleObjectAJsonNested1()  # @aj{"groups": ["public"]}
 
         dict_obj = self.serializer.to_dict(SSimpleObjectAJsonNested2(), groups=["admin"])
         self.assertEqual(len(dict_obj.keys()), 1)
@@ -131,8 +131,8 @@ class TestSerialization(unittest.TestCase):
         @AJson
         class SSimpleObjectWithDate(object):
             def __init__(self):
-                self.time1 = datetime(2000, 2, 1, 5, 30)  # @as{"d_format": "%Y/%m/%d"}
-                self.time2 = datetime(2010, 5, 10, 2, 40)  # @as{"d_format": "%Y--%H%M"}
+                self.time1 = datetime(2000, 2, 1, 5, 30)  # @aj{"d_format": "%Y/%m/%d"}
+                self.time2 = datetime(2010, 5, 10, 2, 40)  # @aj{"d_format": "%Y--%H%M"}
 
         dict_obj = self.serializer.to_dict(SSimpleObjectWithDate())
         self.assertEqual(len(dict_obj.keys()), 2)

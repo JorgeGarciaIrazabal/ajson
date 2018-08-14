@@ -12,7 +12,7 @@ class TestAJsonDecorator(unittest.TestCase):
         @AJson
         class AJDA:
             def __init__(self):
-                self.a = 10  # testing @as{ "groups": ["admin"]}
+                self.a = 10  # testing @aj{ "groups": ["admin"]}
 
         reports = JsonClassReports().reports
         self.assertIn(AJDA, reports)
@@ -25,7 +25,7 @@ class TestAJsonDecorator(unittest.TestCase):
         @AJson
         class AJDB:
             def __init__(self):
-                self.a = 10  # testing @as{ "groups": ["admin"], "name": "annotation"}
+                self.a = 10  # testing @aj{ "groups": ["admin"], "name": "annotation"}
 
         reports = JsonClassReports().reports
         self.assertIn(AJDB, reports)
@@ -38,7 +38,7 @@ class TestAJsonDecorator(unittest.TestCase):
             def __init__(self):
                 self.a = 10
                 '''
-                    @as{ 
+                    @aj{ 
                     "groups": [
                         "admin",
                         "public"
