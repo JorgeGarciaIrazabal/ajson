@@ -71,7 +71,7 @@ class TestSerialization(unittest.TestCase):
 
     # Test with AJson decoration todo: consider creating a different TestCase for this
     def test_empty_object_with_ajson_returns_empty_object(self):
-        @AJson
+        @AJson()
         class SEmptyObjectAJson(object):
             def __init__(self):
                 self.a = 1
@@ -80,7 +80,7 @@ class TestSerialization(unittest.TestCase):
         self.assertEqual(len(json.loads(serialization).keys()), 0)
 
     def test_object_with_ajson_returns_only_as_attributes(self):
-        @AJson
+        @AJson()
         class SSimpleObjectAJson(object):
             def __init__(self):
                 self.a = 1  # @aj{}
@@ -91,7 +91,7 @@ class TestSerialization(unittest.TestCase):
         self.assertEqual(json.loads(serialization)["a"], 1)
 
     def test_object_with_ajson_returns_only_attributes_in_group(self):
-        @AJson
+        @AJson()
         class SSimpleObjectAJsonWithGroups(object):
             def __init__(self):
                 self.a = 1  # @aj{"groups": ["admin"]}
@@ -106,13 +106,13 @@ class TestSerialization(unittest.TestCase):
         self.assertEqual(json.loads(serialization)["b"], 2)
 
     def test_object_with_ajson_returns_only_attributes_in_group_with_nested_references(self):
-        @AJson
+        @AJson()
         class SSimpleObjectAJsonNested1(object):
             def __init__(self):
                 self.a = 1  # @aj{"groups": ["admin"]}
                 self.b = 2  # @aj{"groups": ["public"]}
 
-        @AJson
+        @AJson()
         class SSimpleObjectAJsonNested2(object):
             def __init__(self):
                 self.nested1 = SSimpleObjectAJsonNested1()  # @aj{"groups": ["admin"]}
@@ -128,7 +128,7 @@ class TestSerialization(unittest.TestCase):
         self.assertEqual(dict_obj["nested2"], {"a": 1, "b": 2})
 
     def test_object_with_ajson_and_date_format_returns_the_right_date_format(self):
-        @AJson
+        @AJson()
         class SSimpleObjectWithDate(object):
             def __init__(self):
                 self.time1 = datetime(2000, 2, 1, 5, 30)  # @aj{"d_format": "%Y/%m/%d"}
