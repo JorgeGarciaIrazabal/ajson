@@ -10,6 +10,12 @@ Groups = NewType("Groups", Optional[List[str]])
 Handler = NewType("Handler", Callable[[Any, Groups, _AttrReport], Any])
 
 
+class AJsonUnserializeError(Exception):
+    def __init__(self, obj_name, attr_name):
+        message = "Unable to unserialize {0}. Attribute {1} not found".format(obj_name, attr_name)
+        super(Exception, self).__init__(message)
+
+
 class ASerializer:
     def __init__(self, max_depth=15):
         self.max_depth: int = max_depth
@@ -63,6 +69,7 @@ class ASerializer:
                 attr_report = None
             else:
                 attr_report = class_report.get(key)
+                key = attr_report.name
             serialized_dict[key] = self._to_dict_recursive(value, groups, depth, attr_report)
         return serialized_dict
 
@@ -106,6 +113,8 @@ class ASerializer:
                     result_dict = self._from_dict_recursive(value, _class=attr_class, attr_report=attr_report)
                     setattr(result_obj, attr_report.attribute_name, result_dict)
                 except StopIteration:
+                    if not hasattr(result_obj, key):
+                        raise AJsonUnserializeError(_class.__name__, key)
                     setattr(result_obj, key, self._from_dict_recursive(value))
             return result_obj
         elif isinstance(dict_obj, str):
