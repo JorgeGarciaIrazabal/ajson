@@ -10,5 +10,5 @@ exclude_lines =
     if __name__ == .__main__.:
 omit =
     tests/*
-    __init__*
+    *__init__*
     setup.py

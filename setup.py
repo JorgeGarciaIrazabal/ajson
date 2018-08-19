@@ -23,19 +23,19 @@ except:
 
 setup(
     name='ajson',
-    version='0.1.0',
+    version='0.3.0',
 
     description='simple serializer based on annotations',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/JorgeGarciaIrazabal/ajson.git',
+    url='https://github.com/JorgeGarciaIrazabal/ajson',
 
     author='Jorge Garcia Irazabal',
     author_email='jorge.girazabal@gmail.com',
 
     # Choose your license
-    license='GNU Version 3',
+    license='GNU General Public License v3 (GPLv3)',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -43,10 +43,10 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
-        'License :: OSI Approved :: GNU Version 3',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3.6',
     ],
     keywords='json serializer annotation',

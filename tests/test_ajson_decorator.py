@@ -1,7 +1,7 @@
 import unittest
 
 from ajson.class_decorator import AJson
-from ajson.json_class_reports import JsonClassReports, ISO_FORMAT
+from ajson.json_class_reports import JsonClassReports, ISO_FORMAT, AJsonUniqueClassNameError
 
 
 class TestAJsonDecorator(unittest.TestCase):
@@ -9,10 +9,10 @@ class TestAJsonDecorator(unittest.TestCase):
         JsonClassReports().clear()
 
     def test_annotation_class_creates_report_with_group(self):
-        @AJson
+        @AJson()
         class AJDA:
             def __init__(self):
-                self.a = 10  # testing @as{ "groups": ["admin"]}
+                self.a = 10  # testing @aj{ "groups": ["admin"]}
 
         reports = JsonClassReports().reports
         self.assertIn(AJDA, reports)
@@ -22,10 +22,10 @@ class TestAJsonDecorator(unittest.TestCase):
         self.assertEqual(reports[AJDA].get("a").name, "a")
 
     def test_annotation_class_creates_report_with_group_and_name(self):
-        @AJson
+        @AJson()
         class AJDB:
             def __init__(self):
-                self.a = 10  # testing @as{ "groups": ["admin"], "name": "annotation"}
+                self.a = 10  # testing @aj{ "groups": ["admin"], "name": "annotation"}
 
         reports = JsonClassReports().reports
         self.assertIn(AJDB, reports)
@@ -33,12 +33,12 @@ class TestAJsonDecorator(unittest.TestCase):
         self.assertEqual(reports[AJDB].get("a").name, "annotation")
 
     def test_annotation_class_creates_report_all_parameters(self):
-        @AJson
+        @AJson()
         class AJDC:
             def __init__(self):
                 self.a = 10
                 '''
-                    @as{ 
+                    @aj{ 
                     "groups": [
                         "admin",
                         "public"
@@ -53,3 +53,16 @@ class TestAJsonDecorator(unittest.TestCase):
         self.assertEqual(reports[AJDC].get("a").groups, {"admin", "public"})
         self.assertEqual(reports[AJDC].get("a").datetime_format, "Y-M-D")
         self.assertEqual(reports[AJDC].get("a").name, "annotation")
+
+    def test_annotation_class_name_has_to_be_unique(self):
+        @AJson(class_name="AJDD")
+        class AJDD:
+            pass
+
+        with self.assertRaises(AJsonUniqueClassNameError):
+            @AJson(class_name="AJDD")
+            class AJDE:
+                pass
+
+
+

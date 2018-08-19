@@ -7,7 +7,7 @@ class TestClassInspector(unittest.TestCase):
     def test_simple_class_with_inline_annotation_gets_the_as_params_and_identifies_the_attributes(self):
         class CIA:
             def __init__(self):
-                self.a = 10  # testing @as{ "groups": 1}
+                self.a = 10  # testing @aj{ "groups": 1}
                 self.b = 10  # testing @ac{ "groups": ["test"]}
 
         report = ClassInspector().inspect_class(CIA)
@@ -21,7 +21,7 @@ class TestClassInspector(unittest.TestCase):
             def __init__(self):
                 self.a = 10
                 '''
-                    @as{
+                    @aj{
                         "groups": [
                             1,
                             2,
@@ -41,13 +41,13 @@ class TestClassInspector(unittest.TestCase):
             def __init__(self):
                 self.a = 10
                 '''
-                    @as{
+                    @aj{
                         "groups: [
                             1,
                         ]
                     }
                 '''
-                self.b = 1  # @as{"name": "test"}
+                self.b = 1  # @aj{"name": "test"}
 
         report = ClassInspector().inspect_class(CIC)
         self.assertEqual(len(report.keys()), 1)
@@ -59,11 +59,11 @@ class TestClassInspector(unittest.TestCase):
         class CID:
             def __init__(self):
                 '''
-                    @as{
+                    @aj{
                         "groups":  1
                     }
                 '''
-                self.b = 6  # @as{"name": "test"}
+                self.b = 6  # @aj{"name": "test"}
 
         report = ClassInspector().inspect_class(CID)
         self.assertEqual(len(report.keys()), 1)

@@ -4,13 +4,13 @@ import unittest
 
 from ajson.class_decorator import AJson
 from ajson.json_class_reports import JsonClassReports, ISO_FORMAT
-from ajson.serializer import Serializer
+from ajson.aserializer import ASerializer
 
 
 class TestSerialization(unittest.TestCase):
     # Test with AJson decoration
     def setUp(self):
-        self.serializer = Serializer()
+        self.serializer = ASerializer()
         JsonClassReports().clear()
 
     def test_basic_object_serialization(self):
@@ -69,72 +69,23 @@ class TestSerialization(unittest.TestCase):
         date_dict = self.serializer.to_dict({"datetime": date})
         self.assertEqual(date_dict["datetime"], "test")
 
-    # Test with AJson decoration todo: consider creating a different TestCase for this
-    def test_empty_object_with_ajson_returns_empty_object(self):
-        @AJson
-        class SEmptyObjectAJson(object):
+    # Unserialize
+
+    def test_simple_unserialize_returns_dict(self):
+        class SSimpleObject(object):
             def __init__(self):
-                self.a = 1
+                self.a = 5
+                self.b = "hi"
+                self.c = None
 
-        serialization = self.serializer.serialize(SEmptyObjectAJson())
-        self.assertEqual(len(json.loads(serialization).keys()), 0)
+        obj_src = self.serializer.serialize(SSimpleObject())
+        obj_dict = self.serializer.unserialize(obj_src)
+        self.assertEqual(obj_dict["a"], 5)
+        self.assertEqual(obj_dict["b"], "hi")
+        self.assertIsNone(obj_dict["c"])
 
-    def test_object_with_ajson_returns_only_as_attributes(self):
-        @AJson
-        class SSimpleObjectAJson(object):
-            def __init__(self):
-                self.a = 1  # @as{}
-                self.b = 1
-
-        serialization = self.serializer.serialize(SSimpleObjectAJson())
-        self.assertEqual(len(json.loads(serialization).keys()), 1)
-        self.assertEqual(json.loads(serialization)["a"], 1)
-
-    def test_object_with_ajson_returns_only_attributes_in_group(self):
-        @AJson
-        class SSimpleObjectAJsonWithGroups(object):
-            def __init__(self):
-                self.a = 1  # @as{"groups": ["admin"]}
-                self.b = 2  # @as{"groups": ["public"]}
-
-        serialization = self.serializer.serialize(SSimpleObjectAJsonWithGroups(), groups=["admin"])
-        self.assertEqual(len(json.loads(serialization).keys()), 1)
-        self.assertEqual(json.loads(serialization)["a"], 1)
-
-        serialization = self.serializer.serialize(SSimpleObjectAJsonWithGroups(), groups=["public"])
-        self.assertEqual(len(json.loads(serialization).keys()), 1)
-        self.assertEqual(json.loads(serialization)["b"], 2)
-
-    def test_object_with_ajson_returns_only_attributes_in_group_with_nested_references(self):
-        @AJson
-        class SSimpleObjectAJsonNested1(object):
-            def __init__(self):
-                self.a = 1  # @as{"groups": ["admin"]}
-                self.b = 2  # @as{"groups": ["public"]}
-
-        @AJson
-        class SSimpleObjectAJsonNested2(object):
-            def __init__(self):
-                self.nested1 = SSimpleObjectAJsonNested1()  # @as{"groups": ["admin"]}
-                self.nested2 = SSimpleObjectAJsonNested1()  # @as{"groups": ["public"]}
-
-        dict_obj = self.serializer.to_dict(SSimpleObjectAJsonNested2(), groups=["admin"])
-        self.assertEqual(len(dict_obj.keys()), 1)
-        self.assertEqual(dict_obj["nested1"], {"a": 1})
-
-        dict_obj = self.serializer.to_dict(SSimpleObjectAJsonNested2(), groups=["admin", "public"])
-        self.assertEqual(len(dict_obj.keys()), 2)
-        self.assertEqual(dict_obj["nested1"], {"a": 1, "b": 2})
-        self.assertEqual(dict_obj["nested2"], {"a": 1, "b": 2})
-
-    def test_object_with_ajson_and_date_format_returns_the_right_date_format(self):
-        @AJson
-        class SSimpleObjectWithDate(object):
-            def __init__(self):
-                self.time1 = datetime(2000, 2, 1, 5, 30)  # @as{"d_format": "%Y/%m/%d"}
-                self.time2 = datetime(2010, 5, 10, 2, 40)  # @as{"d_format": "%Y--%H%M"}
-
-        dict_obj = self.serializer.to_dict(SSimpleObjectWithDate())
-        self.assertEqual(len(dict_obj.keys()), 2)
-        self.assertEqual(dict_obj["time1"], "2000/02/01")
-        self.assertEqual(dict_obj["time2"], "2010--0240")
+    def test_simple_unserialize_date_time_with_iso_format(self):
+        date = datetime.now()
+        date_src = self.serializer.serialize({"datetime": date})
+        date_dict = self.serializer.unserialize(date_src)
+        self.assertIsInstance(date_dict["datetime"], datetime)

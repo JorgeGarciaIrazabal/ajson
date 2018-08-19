@@ -52,14 +52,14 @@ class TestCommentHandler(unittest.TestCase):
             def __init__(self):
                 self.a = 4
                 '''
-                    @as{"group": 2}
+                    @aj{"group": 2}
                 '''
 
         cleared_class = CommentHandler().format_class_source(inspect.getsource(CHD))
 
         self.assertEqual(cleared_class, """        class CHD:
             def __init__(self):
-                self.a = 4  # @as{"group": 2}
+                self.a = 4  # @aj{"group": 2}
                 
 """)
 
@@ -68,22 +68,22 @@ class TestCommentHandler(unittest.TestCase):
             def __init__(self):
                 self.a = 4
                 '''
-                    @as{"group": 0}
+                    @aj{"group": 0}
                 '''
-                self.b = 8  # ANOTHER TEST @as{"group": 1}
+                self.b = 8  # ANOTHER TEST @aj{"group": 1}
                 self.c = self.b
                 """
                     this is a comment and then we have the as_comment 
-                    __example__ @as{"group": 2}
+                    __example__ @aj{"group": 2}
                 """
 
         cleared_class = CommentHandler().format_class_source(inspect.getsource(CHE))
 
         self.assertEqual(cleared_class, """        class CHE:
             def __init__(self):
-                self.a = 4  # @as{"group": 0}
+                self.a = 4  # @aj{"group": 0}
                 
-                self.b = 8  # ANOTHER TEST @as{"group": 1}
-                self.c = self.b  # @as{"group": 2}
+                self.b = 8  # ANOTHER TEST @aj{"group": 1}
+                self.c = self.b  # @aj{"group": 2}
                 
 """)
