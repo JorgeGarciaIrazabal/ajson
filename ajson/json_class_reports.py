@@ -21,6 +21,7 @@ class _AttrReport(object):
         self.name: str = kwargs.get("name", attribute_name)
         self.datetime_format: str = kwargs.get("d_format", ISO_FORMAT)  # iso format
         self.attribute_name: str = attribute_name
+        self.type: str = kwargs.get("type", None)
 
         self.groups = self.groups if self.groups is None else set(self.groups)
 
@@ -38,7 +39,7 @@ class _ClassReport(object):
         return [
             key for key, report in self.report_map.items()
             if report.groups is None or
-            len(report.groups.intersection(groups)) > 0
+               len(report.groups.intersection(groups)) > 0
         ]
 
     def get_by_serialize_name(self, name: str) -> _AttrReport:
@@ -48,16 +49,19 @@ class _ClassReport(object):
 class JsonClassReports(object, metaclass=Singleton):
     def __init__(self):
         self.reports: Dict[type, _ClassReport] = {}
-        self.name_to_csl_map: Dict[str, type] = {}
+        self.type_to_csl_map: Dict[str, type] = {}
 
     def add(self, cls: type, cls_name: str, class_report_dict: Dict):
         class_report = {}
         for key, attribute_report in class_report_dict.items():
             class_report[key] = _AttrReport(key, **attribute_report)
         self.reports[cls] = _ClassReport(class_report)
-        if cls_name in self.name_to_csl_map:
+        if cls_name in self.type_to_csl_map:
             raise AJsonUniqueClassNameError(cls_name)
-        self.name_to_csl_map[cls_name] = cls
+        self.type_to_csl_map[cls_name] = cls
 
     def clear(self):
         self.reports = {}
+
+    def get_class_by_type(self, class_name: str) -> type:
+        return self.type_to_csl_map.get(class_name, None)
