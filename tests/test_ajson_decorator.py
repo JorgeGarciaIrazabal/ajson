@@ -55,12 +55,12 @@ class TestAJsonDecorator(unittest.TestCase):
         self.assertEqual(reports[AJDC].get("a").name, "annotation")
 
     def test_annotation_class_name_has_to_be_unique(self):
-        @AJson(class_name="AJDD")
+        @AJson(type_name="AJDD")
         class AJDD:
             pass
 
         with self.assertRaises(AJsonUniqueClassNameError):
-            @AJson(class_name="AJDD")
+            @AJson(type_name="AJDD")
             class AJDE:
                 pass
 

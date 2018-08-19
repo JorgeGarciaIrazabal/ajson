@@ -147,13 +147,13 @@ class TestSerializationWithAnnotations(unittest.TestCase):
 
     # Unserialize
     def test_unserialize_nested_objects(self):
-        @AJson(class_name="o1")
+        @AJson(type_name="o1")
         class USNestedObject0(object):
             def __init__(self):
                 self.a = 1  # @aj{"name": "my_mane"}
                 self.date: datetime = None  # @aj{"d_format": "%Y/%m/%d"}
 
-        @AJson(class_name="o2")
+        @AJson(type_name="o2")
         class USNestedObject1(object):
             def __init__(self):
                 self.nested = USNestedObject0()  # @aj{"type": "o1"}

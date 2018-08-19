@@ -16,14 +16,14 @@ here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
 try:
-    with open(path.join(here, 'README.rm')) as f:
+    with open(path.join(here, 'README.md')) as f:
         long_description = f.read()
 except:
     long_description = 'ajson'
 
 setup(
     name='ajson',
-    version='0.3.0',
+    version='0.3.2',
 
     description='simple serializer based on annotations',
     long_description=long_description,
