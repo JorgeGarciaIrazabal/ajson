@@ -35,3 +35,5 @@ if __name__ == "__main__":
     print("created tag: v{}".format(version))
     check_call(["git", "push", "origin", "--tags"])
     print("pushed tag: v{}".format(version))
+    check_call(["make", "upload"])
+    print("uploaded to ")

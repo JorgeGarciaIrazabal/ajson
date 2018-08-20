@@ -37,7 +37,7 @@ setup(
     author_email='jorge.girazabal@gmail.com',
 
     # Choose your license
-    license='The Do What The Fuck You Want To Public License (WTFPL)',
+    license='GNU General Public License v3 (GPLv3)',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -48,7 +48,7 @@ setup(
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
-        'License :: OSI Approved :: The Do What The Fuck You Want To Public License (WTFPL)',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3.6',
     ],
     keywords='json serializer annotation',
