@@ -6,11 +6,13 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
-# Always prefer setuptools over distutils
-from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
 from os import path
+
+# Always prefer setuptools over distutils
+from setuptools import setup, find_packages
+import ajson
 
 here = path.abspath(path.dirname(__file__))
 
@@ -23,7 +25,7 @@ except:
 
 setup(
     name='ajson',
-    version='0.3.2',
+    version=ajson.__version__,
 
     description='simple serializer based on annotations',
     long_description=long_description,
@@ -35,7 +37,7 @@ setup(
     author_email='jorge.girazabal@gmail.com',
 
     # Choose your license
-    license='The Do What The Fuck You Want To Public License (WTFPL)',
+    license='GNU General Public License v3 (GPLv3)',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -46,7 +48,7 @@ setup(
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
-        'License :: OSI Approved :: The Do What The Fuck You Want To Public License (WTFPL)',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3.6',
     ],
     keywords='json serializer annotation',
