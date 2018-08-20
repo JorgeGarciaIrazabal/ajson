@@ -39,6 +39,10 @@ class ClassInspector(object, metaclass=Singleton):
         line = source_to_as[source_to_as.rfind("\n"):].strip()  # type: str
         attributes_found = find_attribute_regex.findall(line)
         if len(attributes_found) >= 1:
-            return attributes_found[0][5:]
+            if attributes_found[0][1] == '':
+                return attributes_found[0][0][5:]
+            else:
+                return attributes_found[0][1]
+
         return None
 

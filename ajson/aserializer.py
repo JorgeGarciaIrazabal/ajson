@@ -109,7 +109,10 @@ class ASerializer:
             for key, value in dict_obj.items():
                 try:
                     attr_report = class_report.get_by_serialize_name(key)
-                    attr_class = JsonClassReports().get_class_by_type(attr_report.type)
+                    if hasattr(_class, '__annotations__'):
+                        attr_class = _class.__annotations__.get(key, None)
+                    else:
+                        attr_class = None
                     result_dict = self._from_dict_recursive(value, _class=attr_class, attr_report=attr_report)
                     setattr(result_obj, attr_report.attribute_name, result_dict)
                 except StopIteration:
