@@ -1,17 +1,19 @@
-from datetime import timedelta, datetime
 import json
 import unittest
+from datetime import timedelta, datetime
 
-from ajson.class_decorator import AJson
-from ajson.json_class_reports import JsonClassReports, ISO_FORMAT
 from ajson.aserializer import ASerializer
+from ajson.json_class_reports import JsonClassReports, ISO_FORMAT
 
 
 class TestSerialization(unittest.TestCase):
-    # Test with AJson decoration
     def setUp(self):
         self.serializer = ASerializer()
+        self.old_reports = JsonClassReports().reports
         JsonClassReports().clear()
+
+    def tearDown(self):
+        JsonClassReports().reports = self.old_reports
 
     def test_basic_object_serialization(self):
         serialization = self.serializer.serialize(5)

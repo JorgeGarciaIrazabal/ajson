@@ -46,10 +46,13 @@ from ajson.aserializer import ASerializer
 
 @AJson()
 class Customer:
+    name: str  # @aj{"name": "firstName"}
+    primary_email: str  # @aj{"name": "email"}
+    last_name: str  # @aj{"name": "lastName"}
     def __init__(self):
-        self.name = "John"  # @aj{"name": "firstName"}
-        self.last_name = "Smith"  # @aj{"name": "lastName"}
-        self.primary_email = "john.smith@something.com"  # @aj{"name": "email"}
+        self.name = "John"
+        self.last_name = "Smith"
+        self.primary_email = "john.smith@something.com"
 
 customer = Customer()
 print(ASerializer().serialize(customer))
@@ -112,10 +115,9 @@ from ajson.aserializer import ASerializer
 
 @AJson()
 class Customer:
-    def __init__(self):
-        self.name = None  # @aj{"name": "firstName"}
-        self.primary_email = None  # @aj{"name": "email"}
-        self.last_name = None  # @aj{"name": "lastName"}
+    name: str  # @aj{"name": "firstName"}
+    primary_email: str  # @aj{"name": "email"}
+    last_name: str  # @aj{"name": "lastName"}
 
 serialize_str = '{"firstName": "John", "lastName": "Smith", "email": "john.smith@something.com"}'
 customer = ASerializer().unserialize(serialize_str, Customer)

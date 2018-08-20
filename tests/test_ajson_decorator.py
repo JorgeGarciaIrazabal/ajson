@@ -1,12 +1,16 @@
 import unittest
 
 from ajson.class_decorator import AJson
-from ajson.json_class_reports import JsonClassReports, ISO_FORMAT, AJsonUniqueClassNameError
+from ajson.json_class_reports import JsonClassReports, ISO_FORMAT
 
 
 class TestAJsonDecorator(unittest.TestCase):
     def setUp(self):
+        self.old_reports = JsonClassReports().reports
         JsonClassReports().clear()
+
+    def tearDown(self):
+        JsonClassReports().reports = self.old_reports
 
     def test_annotation_class_creates_report_with_group(self):
         @AJson()
@@ -53,16 +57,6 @@ class TestAJsonDecorator(unittest.TestCase):
         self.assertEqual(reports[AJDC].get("a").groups, {"admin", "public"})
         self.assertEqual(reports[AJDC].get("a").datetime_format, "Y-M-D")
         self.assertEqual(reports[AJDC].get("a").name, "annotation")
-
-    def test_annotation_class_name_has_to_be_unique(self):
-        @AJson(type_name="AJDD")
-        class AJDD:
-            pass
-
-        with self.assertRaises(AJsonUniqueClassNameError):
-            @AJson(type_name="AJDD")
-            class AJDE:
-                pass
 
 
 
