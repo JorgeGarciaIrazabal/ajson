@@ -14,6 +14,8 @@ def increment_version():
     else:
         raise ValueError("argument has to be either 'hotfix', 'minor' or 'mayor'")
     parsed_version[index] = str(int(parsed_version[index]) + 1)
+    for pre_i in range(index + 1, len(parsed_version)):
+        parsed_version[pre_i] = "0"
     version = ".".join(parsed_version)
     with open("ajson/__init__.py", "r+") as f:
         lines = list(map(lambda l: l.strip(), f.readlines()))
