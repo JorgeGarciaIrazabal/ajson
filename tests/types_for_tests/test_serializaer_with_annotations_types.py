@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from ajson import AJson
 
@@ -74,3 +75,8 @@ class USNestedObject0(object):
 @AJson()
 class USNestedObject1(object):
     nested: USNestedObject0 = USNestedObject0()  # @aj{}
+
+
+@AJson()
+class USNestedListObject(object):
+    nested_list: List[USNestedObject0] = [USNestedObject0()]  # @aj{}

@@ -1,8 +1,7 @@
 import json
 from datetime import datetime
-
 import collections
-from typing import Optional, List, Dict, Callable, Any, NewType, Type
+from typing import Optional, List, Dict, Callable, Any, NewType, Type, Set, Tuple
 
 from ajson.json_class_reports import JsonClassReports, _ClassReport, _AttrReport, ISO_FORMAT
 
@@ -100,35 +99,57 @@ class ASerializer:
     def _from_dict_recursive(self, dict_obj: Any, _class: Optional[Type] = None, attr_report: _AttrReport = None,
                              *init_args_array, **init_dict_args) -> Any:
         if isinstance(dict_obj, (list, tuple, set)):
-            return [self._from_dict_recursive(item, _class, *init_args_array, **init_dict_args) for item in dict_obj]
+            return self._unserialize_list(_class, dict_obj, init_args_array, init_dict_args)
         elif isinstance(dict_obj, dict):
-            class_report = JsonClassReports().reports.get(_class, None)
-            if class_report is None or _class is None:
-                return {k: self._from_dict_recursive(v) for k, v in dict_obj.items()}
-            result_obj = _class(*init_args_array, **init_dict_args)
-            for key, value in dict_obj.items():
-                try:
-                    attr_report = class_report.get_by_serialize_name(key)
-                    if hasattr(_class, '__annotations__'):
-                        attr_class = _class.__annotations__.get(key, None)
-                    else:
-                        attr_class = None
-                    result_dict = self._from_dict_recursive(value, _class=attr_class, attr_report=attr_report)
-                    setattr(result_obj, attr_report.attribute_name, result_dict)
-                except StopIteration:
-                    if not hasattr(result_obj, key):
-                        raise AJsonUnserializeError(_class.__name__, key)
-                    setattr(result_obj, key, self._from_dict_recursive(value))
-            return result_obj
+            return self._unserialize_obj(_class, dict_obj, init_args_array, init_dict_args)
         elif isinstance(dict_obj, str):
-            # check if it is a date time
-            if attr_report is not None:
-                datetime_format = attr_report.datetime_format
-            else:
-                datetime_format = ISO_FORMAT
-            try:
-                return datetime.strptime(dict_obj, datetime_format)
-            except ValueError:
-                return dict_obj
+            return self._unserialize_str_or_date(attr_report, dict_obj)
 
         return dict_obj
+
+    def _unserialize_obj(self, _class: Optional[Type], dict_obj: Any, init_args_array, init_dict_args):
+        class_report = JsonClassReports().reports.get(_class, None)
+        if class_report is None or _class is None:
+            return {k: self._from_dict_recursive(v) for k, v in dict_obj.items()}
+        result_obj = _class(*init_args_array, **init_dict_args)
+        for key, value in dict_obj.items():
+            try:
+                attr_report = class_report.get_by_serialize_name(key)
+                if hasattr(_class, '__annotations__'):
+                    attr_class = _class.__annotations__.get(attr_report.attribute_name, None)
+                else:
+                    attr_class = None
+                result_dict = self._from_dict_recursive(value, _class=attr_class, attr_report=attr_report)
+                setattr(result_obj, attr_report.attribute_name, result_dict)
+            except StopIteration:
+                if not hasattr(result_obj, key):
+                    raise AJsonUnserializeError(_class.__name__, key)
+                setattr(result_obj, key, self._from_dict_recursive(value))
+        return result_obj
+
+    def _unserialize_str_or_date(self, attr_report: _AttrReport, dict_obj: Any) -> Any:
+        # check if it is a date time
+        if attr_report is not None:
+            datetime_format = attr_report.datetime_format
+        else:
+            datetime_format = ISO_FORMAT
+        try:
+            return datetime.strptime(dict_obj, datetime_format)
+        except ValueError:
+            return dict_obj
+
+    def _unserialize_list(self, _class: Optional[Type], dict_obj: Any, init_args_array, init_dict_args) -> Any:
+        if _class is None:
+            return [self._from_dict_recursive(item, _class, *init_args_array, **init_dict_args) for item in dict_obj]
+        list_type = None
+        if _class is not None and getattr(_class, '__args__', None) is not None and len(_class.__args__) > 0:
+            list_type = _class.__args__[0]
+
+        if issubclass(_class, List):
+            return [self._from_dict_recursive(item, list_type, *init_args_array, **init_dict_args) for item in dict_obj]
+        elif issubclass(_class, Set):
+            return {self._from_dict_recursive(item, list_type, *init_args_array, **init_dict_args) for item in dict_obj}
+        elif issubclass(_class, Tuple):
+            return (self._from_dict_recursive(item, list_type, *init_args_array, **init_dict_args) for item in dict_obj)
+        else:
+            return [self._from_dict_recursive(item, _class, *init_args_array, **init_dict_args) for item in dict_obj]

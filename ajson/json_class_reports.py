@@ -11,7 +11,6 @@ class _AttrReport(object):
         self.name: str = kwargs.get("name", attribute_name)
         self.datetime_format: str = kwargs.get("d_format", ISO_FORMAT)  # iso format
         self.attribute_name: str = attribute_name
-        self.type: str = kwargs.get("type", None)
 
         self.groups = self.groups if self.groups is None else set(self.groups)
 
