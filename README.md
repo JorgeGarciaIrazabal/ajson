@@ -1,4 +1,4 @@
-from _ast27 import List#AJson (Annotations Json Serializer)
+# AJson (Annotations Json Serializer)
 
 AJson is a serializer based on annotations that gives a lot of flexibility and configuration for you serialization process.
 
