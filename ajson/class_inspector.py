@@ -36,7 +36,7 @@ class ClassInspector(object, metaclass=Singleton):
 
     def _find_attribute(self, source, as_position) -> Optional[str]:
         source_to_as = source[:as_position]
-        line = source_to_as[source_to_as.rfind("\n"):].strip()  # type: str
+        line: str = source_to_as[source_to_as.rfind("\n"):].strip()
         attributes_found = find_attribute_regex.findall(line)
         if len(attributes_found) >= 1:
             if attributes_found[0][1] == '':

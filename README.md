@@ -1,4 +1,4 @@
-#AJson (Annotations Json Serializer)
+from _ast27 import List#AJson (Annotations Json Serializer)
 
 AJson is a serializer based on annotations that gives a lot of flexibility and configuration for you serialization process.
 
@@ -12,10 +12,10 @@ AJson is a serializer based on annotations that gives a lot of flexibility and c
 
 #### Motivation:
 
-There are serialization libraries like [jsonpickle](https://jsonpickle.github.io/) that are amazing, and even more when the serialized object is meant to be used in python too. 
-But there are no libraries that let you filter the fields to serialize or modify the names of the attributes, which are features super useful mainly for http APIs
+There are amazing serialization libraries like [jsonpickle](https://jsonpickle.github.io/), and even more when the serialized object is meant to be used in python too. 
+But there are no libraries that let you filter the fields to serialize or modify the names of the attributes, which are features super useful, mainly for http APIs
 
-This library allows you to have those features in a simple and intuitive way
+This library allows you to have those features in a simple and intuitive way.
 
 #### Serialize Examples
 
@@ -105,7 +105,6 @@ print(ASerializer().to_dict(restaurant, groups=["public", "with_customers"]))
 '''
 ```
 
-
 #### Unserialize Examples
 
 ###### UnSerialization With Custom Names
@@ -126,11 +125,13 @@ print(customer.last_name)  # "Smith"
 print(customer.primary_email)  # "john.smith@something.com"
 ```
 
-###### Nested Objects With Groups And Names
+###### Nested Objects
 
 ```python
+from typing import List
 from ajson import AJson
 from ajson.aserializer import ASerializer
+
 
 @AJson()
 class Customer:
@@ -140,18 +141,18 @@ class Customer:
 
 @AJson()
 class Restaurant:
+    customer_list: List[Customer]  # if we want to have nested objects, we need to define the types with the annotations
+    '''
+        @aj{"name": "customers"}
+        we can create the @aj annotation in the attribute  definition
+    '''
+    owner: str
+    location: str
+
     def __init__(self):
         self.location = None
         self.owner = "John Smith"
         self.customer_list = []
-        '''
-            @aj{"type": "Customer", "name": "customers"}
-            
-            If we have nested objects, we need to define what type of object it is.
-            By default, the type is the same name as the class name, but you can modify it
-            with the  `type_name` parameter in the decorator @AJson(type_name="MyCustomer")
-            this way you can prevent conflicts with classes with the same name.
-        '''
 
 restaurant_str = '''
 {

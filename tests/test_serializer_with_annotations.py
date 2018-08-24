@@ -56,7 +56,6 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         obj: USSimpleObjectAJson = self.serializer.from_dict(dict_obj, USSimpleObjectAJson)
         self.assertEqual(obj.a, 10)
 
-    # Unserialize
     def test_unserialize_with_different_name_nade_date_time_format(self):
         dict_obj = {
             "a": 10,  # this should be ignored
@@ -68,7 +67,6 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         self.assertEqual(obj.a, 20)
         self.assertIsInstance(obj.date, datetime)
 
-    # Unserialize
     def test_unserialize_list_returns_list_of_objects(self):
         list_dict = [
             {
@@ -92,7 +90,6 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         self.assertEqual(list_obj[1].date.month, 2)
         self.assertEqual(list_obj[2].date.month, 3)
 
-    # Unserialize
     def test_unserialize_nested_objects(self):
         obj_dict = {
             "nested": {
@@ -105,3 +102,18 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         self.assertEqual(obj.nested.a, 3)
         self.assertIsInstance(obj.nested.date, datetime)
         self.assertEqual(obj.nested.date.year, 2003)
+
+    def test_unserialize_nested_with_object_lists(self):
+        obj_dict = {
+            "nested_list": [
+                {
+                    "my_mane": 3,
+                    "date": "2003/01/01",
+                }
+            ],
+        }
+
+        obj: USNestedListObject = self.serializer.from_dict(obj_dict, USNestedListObject)
+        self.assertEqual(obj.nested_list[0].a, 3)
+        self.assertIsInstance(obj.nested_list[0].date, datetime)
+        self.assertEqual(obj.nested_list[0].date.year, 2003)

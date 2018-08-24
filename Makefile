@@ -7,3 +7,12 @@ sdist:
 upload: clear-build  sdist
 	twine upload dist/*
 	rm -rf build/ & rm -rf dist/ & ajson.egg-info
+
+deploy-hotfix:
+    python deploy.py hotfix
+
+deploy-minor:
+    python deploy.py minor
+
+deploy-minor:
+    python deploy.py minor
