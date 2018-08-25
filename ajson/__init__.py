@@ -1,4 +1,4 @@
 from ajson.aserializer import ASerializer
 from ajson.class_decorator import AJson
 
-__version__ = '0.5.0'
+__version__ = '0.6.0'
