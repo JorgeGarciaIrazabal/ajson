@@ -29,9 +29,9 @@ from ajson.aserializer import ASerializer
 @AJson()
 class Restaurant:
     def __init__(self):
-        self.location = "Manhattan"  # @aj{"groups": ["public", "admin"]}
-        self.tables = 30  # @aj{"groups": ["public", "admin"]}
-        self.owner = "John Smith"  # @aj{"groups": ["admin"]}
+        self.location = "Manhattan"  # @aj(groups=["public", "admin"])
+        self.tables = 30  # @aj(groups=["public", "admin"])
+        self.owner = "John Smith"  # @aj(groups=["admin"])
 
 restaurant = Restaurant()
 print(ASerializer().serialize(restaurant, groups=["public"])) # {"location": "Manhattan", "tables": 30}
@@ -46,9 +46,9 @@ from ajson.aserializer import ASerializer
 
 @AJson()
 class Customer:
-    name: str  # @aj{"name": "firstName"}
-    primary_email: str  # @aj{"name": "email"}
-    last_name: str  # @aj{"name": "lastName"}
+    name: str  # @aj(name=firstName)
+    primary_email: str  # @aj(name=email)
+    last_name: str  # @aj(name=lastName)
     def __init__(self):
         self.name = "John"
         self.last_name = "Smith"
@@ -68,22 +68,22 @@ from ajson.aserializer import ASerializer
 @AJson()
 class Customer:
     def __init__(self, name, primary_email):
-        self.name = name  # @aj{"name": "firstName", "groups": ["public"]}
+        self.name = name  # @aj(name=firstName, groups=["public"])
         self.primary_email = primary_email
         '''
         You can also add the annotation in a multiline docstr
-        @aj{
-            "name": "email",
-            "groups": ["admin"]
+        @aj(
+            name=email,
+            groups=["admin"]
         }
         '''
 
 @AJson()
 class Restaurant:
     def __init__(self):
-        self.location = None  # @aj{"groups": ["public", "admin"]}
-        self.owner = "John Smith"  # @aj{"groups": ["admin"]}
-        self.customer_list = [ # @aj{"groups": ["with_customers"], "name": "customers"}
+        self.location = None  # @aj(groups=["public", "admin"])
+        self.owner = "John Smith"  # @aj(groups=["admin"])
+        self.customer_list = [ # @aj(groups=["with_customers"], name=customers)
             Customer("Dani", "dani@something.com"),
             Customer("Mike", "maki@something.com")
         ]
@@ -114,9 +114,9 @@ from ajson.aserializer import ASerializer
 
 @AJson()
 class Customer:
-    name: str  # @aj{"name": "firstName"}
-    primary_email: str  # @aj{"name": "email"}
-    last_name: str  # @aj{"name": "lastName"}
+    name: str  # @aj(name=firstName)
+    primary_email: str  # @aj(name=email)
+    last_name: str  # @aj(name=lastName)
 
 serialize_str = '{"firstName": "John", "lastName": "Smith", "email": "john.smith@something.com"}'
 customer = ASerializer().unserialize(serialize_str, Customer)
@@ -136,15 +136,15 @@ from ajson.aserializer import ASerializer
 @AJson()
 class Customer:
     def __init__(self):
-        self.name = None  # @aj{"name": "firstName"}
-        self.primary_email = None  # @aj{"name": "email"}
+        self.name = None  # @aj(name=firstName)
+        self.primary_email = None  # @aj(name=email)
 
 @AJson()
 class Restaurant:
     customer_list: List[Customer]  # if we want to have nested objects, we need to define the types with the annotations
     '''
-        @aj{"name": "customers"}
-        we can create the @aj annotation in the attribute  definition
+        @aj(name=customers)
+        we can create the @aj annotation in the attribute's definition
     '''
     owner: str
     location: str
@@ -169,3 +169,9 @@ print(restaurant.owner)  # "John Smith"
 print(restaurant.customer_list[0].name)  # "Dani"
 ```
 
+###### Known Limitations
+
+1. Unserialize a Dict with types (Dict[str:MyObject]) is not supported, it will just unserialize it as a dict.
+
+2. Unserialize a Dict with key different than a string (Dict[int:str])
+ 

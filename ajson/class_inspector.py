@@ -1,7 +1,9 @@
 import inspect
 import json
 import logging
+import os
 from typing import Dict, Match, Optional
+from bs4 import BeautifulSoup
 
 from ajson.comment_handler import CommentHandler
 from ajson.regex import as_comment_regex, find_attribute_regex
@@ -25,12 +27,14 @@ class ClassInspector(object, metaclass=Singleton):
             # getting the as string and removing the # in case the json is multi line
             as_str = source[matches.start(): matches.end()].replace("#", "")
             try:
-                as_params_dict = json.loads(as_str[3:])
+                xml_as_str = "<tag {} ></tag>".format(as_str[4:-1].replace(os.linesep, ''))
+                as_params_dict = BeautifulSoup(xml_as_str, features="html.parser").find('tag').attrs
+                as_params_dict = {k: v.replace("'", '"') for k, v in as_params_dict.items()}
                 attribute = self._find_attribute(source, matches.start())
                 if attribute is not None:
                     report[attribute] = as_params_dict
             except Exception as e:
-                logging.warn("Unable to parse json {}".format(matches[0]))
+                logging.warn("Unable to parse @aj {}".format(matches[0]))
             source = source[matches.end():]
         return report
 
@@ -45,4 +49,3 @@ class ClassInspector(object, metaclass=Singleton):
                 return attributes_found[0][1]
 
         return None
-

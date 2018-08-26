@@ -1,24 +1,24 @@
 import unittest
 
 from ajson.class_decorator import AJson
-from ajson.json_class_reports import JsonClassReports, ISO_FORMAT
+from ajson.json_class_reports import JsonTypeReports, ISO_FORMAT
 
 
 class TestAJsonDecorator(unittest.TestCase):
     def setUp(self):
-        self.old_reports = JsonClassReports().reports
-        JsonClassReports().clear()
+        self.old_reports = JsonTypeReports().reports
+        JsonTypeReports().clear()
 
     def tearDown(self):
-        JsonClassReports().reports = self.old_reports
+        JsonTypeReports().reports = self.old_reports
 
     def test_annotation_class_creates_report_with_group(self):
         @AJson()
         class AJDA:
             def __init__(self):
-                self.a = 10  # testing @aj{ "groups": ["admin"]}
+                self.a = 10  # testing @aj(groups=["admin"])
 
-        reports = JsonClassReports().reports
+        reports = JsonTypeReports().reports
         self.assertIn(AJDA, reports)
         self.assertEqual(len(reports.keys()), 1)
         self.assertEqual(reports[AJDA].get("a").groups, {"admin"})
@@ -29,9 +29,9 @@ class TestAJsonDecorator(unittest.TestCase):
         @AJson()
         class AJDB:
             def __init__(self):
-                self.a = 10  # testing @aj{ "groups": ["admin"], "name": "annotation"}
+                self.a = 10  # testing @aj(groups=["admin"] name=annotation)
 
-        reports = JsonClassReports().reports
+        reports = JsonTypeReports().reports
         self.assertIn(AJDB, reports)
         self.assertEqual(reports[AJDB].get("a").datetime_format, ISO_FORMAT)
         self.assertEqual(reports[AJDB].get("a").name, "annotation")
@@ -42,17 +42,17 @@ class TestAJsonDecorator(unittest.TestCase):
             def __init__(self):
                 self.a = 10
                 '''
-                    @aj{ 
-                    "groups": [
-                        "admin",
-                        "public"
-                        ],
-                    "name": "annotation",
-                    "d_format": "Y-M-D"
-                    }
+                    @aj( 
+                    groups="[
+                        'admin',
+                        'public'
+                        ]"
+                    name=annotation
+                    d_format=Y-M-D
+                    )
                 '''
 
-        reports = JsonClassReports().reports
+        reports = JsonTypeReports().reports
         self.assertIn(AJDC, reports)
         self.assertEqual(reports[AJDC].get("a").groups, {"admin", "public"})
         self.assertEqual(reports[AJDC].get("a").datetime_format, "Y-M-D")
