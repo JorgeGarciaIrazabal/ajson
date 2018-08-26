@@ -1,10 +1,9 @@
-import importlib
+import json
 import json
 import unittest
-from typing import List
 
 from ajson.aserializer import ASerializer
-from ajson.json_class_reports import JsonClassReports
+from ajson.json_class_reports import AJsonEmptyRequiredAttributeError
 from tests.types_for_tests.test_serializaer_with_annotations_types import *
 
 
@@ -117,3 +116,10 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         self.assertEqual(obj.nested_list[0].a, 3)
         self.assertIsInstance(obj.nested_list[0].date, datetime)
         self.assertEqual(obj.nested_list[0].date.year, 2003)
+
+    def test_unserialize_with_required_throws_if_required_is_none(self):
+        dict_obj = {
+            "b": 1,
+        }
+        with self.assertRaises(AJsonEmptyRequiredAttributeError):
+            self.serializer.from_dict(dict_obj, USRequiredObject)

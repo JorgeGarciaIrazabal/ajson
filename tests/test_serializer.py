@@ -3,17 +3,17 @@ import unittest
 from datetime import timedelta, datetime
 
 from ajson.aserializer import ASerializer
-from ajson.json_class_reports import JsonClassReports, ISO_FORMAT
+from ajson.json_class_reports import JsonTypeReports, ISO_FORMAT
 
 
 class TestSerialization(unittest.TestCase):
     def setUp(self):
         self.serializer = ASerializer()
-        self.old_reports = JsonClassReports().reports
-        JsonClassReports().clear()
+        self.old_reports = JsonTypeReports().reports
+        JsonTypeReports().clear()
 
     def tearDown(self):
-        JsonClassReports().reports = self.old_reports
+        JsonTypeReports().reports = self.old_reports
 
     def test_basic_object_serialization(self):
         serialization = self.serializer.serialize(5)

@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from ajson.class_inspector import ClassInspector
@@ -7,13 +8,13 @@ class TestClassInspector(unittest.TestCase):
     def test_simple_class_with_inline_annotation_gets_the_as_params_and_identifies_the_attributes(self):
         class CIA:
             def __init__(self):
-                self.a = 10  # testing @aj{ "groups": 1}
-                self.b = 10  # testing @ac{ "groups": ["test"]}
+                self.a = 10  # testing @aj(groups=["test"] required)
+                self.b = 10  # @ac( "groups": ["test"])
 
         report = ClassInspector().inspect_class(CIA)
         self.assertEqual(len(report.keys()), 1)
         self.assertDictEqual(report, {
-            "a": {"groups": 1}
+            'a': {'groups': '["test"]', 'required': ''}
         })
 
     def test_parse_report_with_as_in_multiline(self):
@@ -21,52 +22,31 @@ class TestClassInspector(unittest.TestCase):
             def __init__(self):
                 self.a = 10
                 '''
-                    @aj{
-                        "groups": [
+                    @aj(
+                        groups="[
                             1,
                             2,
                             3
-                        ]
-                    }
+                        ]"
+                    )
                 '''
 
         report = ClassInspector().inspect_class(CIB)
         self.assertEqual(len(report.keys()), 1)
-        self.assertDictEqual(report, {
-            "a": {"groups": [1, 2, 3]}
-        })
-
-    def test_json_error_just_ignores_that_attibute(self):
-        class CIC:
-            def __init__(self):
-                self.a = 10
-                '''
-                    @aj{
-                        "groups: [
-                            1,
-                        ]
-                    }
-                '''
-                self.b = 1  # @aj{"name": "test"}
-
-        report = ClassInspector().inspect_class(CIC)
-        self.assertEqual(len(report.keys()), 1)
-        self.assertDictEqual(report, {
-            "b": {"name": "test"}
-        })
+        self.assertEqual(json.loads(report['a']['groups']), [1, 2, 3])
 
     def test_annotation_without_attribute_is_ignore(self):
         class CID:
             def __init__(self):
                 '''
-                    @aj{
+                    @aj(
                         "groups":  1
-                    }
+                    )
                 '''
-                self.b = 6  # @aj{"name": "test"}
+                self.b = 6  # @aj(name=test)
 
         report = ClassInspector().inspect_class(CID)
         self.assertEqual(len(report.keys()), 1)
         self.assertDictEqual(report, {
-            "b": {"name": "test"}
+            'b': {'name': 'test'}
         })
