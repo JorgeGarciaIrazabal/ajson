@@ -6,6 +6,8 @@ name = "pypi"
 [dev-packages]
 coverage = "*"
 codecov = "*"
+sphinx = "*"
+sphinx-autobuild = "*"
 
 [packages]
 "beautifulsoup4" = "*"

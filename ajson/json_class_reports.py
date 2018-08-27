@@ -9,6 +9,7 @@ ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 class AJsonAnnotationParseError(Exception):
     pass
 
+
 class AJsonEmptyRequiredAttributeError(Exception):
     pass
 
