@@ -15,7 +15,7 @@
 import os
 import sys
 sys.path.append(os.path.abspath('..'))
-
+import ajson
 
 # -- Project information -----------------------------------------------------
 
@@ -26,7 +26,7 @@ author = 'Jorge Garcia Irazabal'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.7.0'
+release = ajson.__version__
 
 
 # -- General configuration ---------------------------------------------------
