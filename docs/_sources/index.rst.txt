@@ -6,6 +6,17 @@
 Welcome to AJson's documentation!
 =================================
 
+How to install it:
+------------------
+
+.. code-block:: bash
+
+    $ pip install ajson
+
+
+Description:
+------------
+
 `AJson <https://github.com/JorgeGarciaIrazabal/ajson>`_ is a json serializer based on annotations, so you can easily control which and how class attributes should be serialized.
 
 .. code-block:: python
@@ -53,13 +64,6 @@ Or unserialize.
     serialize_str = '{"lastName": "Smith"}'
     customer = ASerializer().unserialize(serialize_str, Customer)
     # this will raise a `AJsonEmptyRequiredAttributeError` Exception
-
-
-
-
-.. code-block:: bash
-
-    $ pip install ajson
 
 
 .. toctree::
