@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>ASerializer &#8212; AJson 0.7.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -15,148 +15,215 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Class Annotations" href="class_annotations.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <link rel="next" title="Serialize Examples" href="examples.html" />
+    <link rel="prev" title="Class Annotations" href="class_annotations.html" /> 
   </head><body>
-  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="examples.html" title="Serialize Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="class_annotations.html" title="Class Annotations"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AJson 0.7.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="aserializer">
 <h1>ASerializer<a class="headerlink" href="#aserializer" title="Permalink to this headline">¶</a></h1>
-<p>In order to describe how to serialize or unserialize an object, you need to describe the class attributes with simple annotations</p>
-<div class="section" id="decorator">
-<h2>decorator<a class="headerlink" href="#decorator" title="Permalink to this headline">¶</a></h2>
-<p>Add the <cite>&#64;AJson</cite> decorator to a class to tell the serializer that this class has to be parsed for future actions</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ajson</span> <span class="kn">import</span> <span class="n">AJson</span>
-
-<span class="nd">@AJson</span><span class="p">()</span>
-<span class="k">class</span> <span class="nc">Restaurant</span><span class="p">:</span>
-    <span class="k">pass</span>
+<dl class="class">
+<dt id="ajson.aserializer.ASerializer">
+<em class="property">class </em><code class="descclassname">ajson.aserializer.</code><code class="descname">ASerializer</code><span class="sig-paren">(</span><em>max_depth=15</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ajson/aserializer.html#ASerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ajson.aserializer.ASerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize and unserialize objects</p>
+<dl class="method">
+<dt id="ajson.aserializer.ASerializer.add_serialize_handler">
+<code class="descname">add_serialize_handler</code><span class="sig-paren">(</span><em>_type: Type</em>, <em>handler: NewType.&lt;locals&gt;.new_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ajson/aserializer.html#ASerializer.add_serialize_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ajson.aserializer.ASerializer.add_serialize_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a handler for a specific type to modify the way it should be serialize</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span><span class="o">.</span><span class="n">add_serialize_handler</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">obj</span> <span class="k">if</span> <span class="n">obj</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># negative ints return 0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">&#39;5&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">)</span>
+<span class="go">&#39;0&#39;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="annotations">
-<h2>Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">¶</a></h2>
-<p>Annotations are comments next to the class attributes with the format <code class="docutils literal notranslate"><span class="pre">`&#64;aj({param1}={value1}</span> <span class="pre">{param2}={value2})`</span></code></p>
-<table border="1" class="colwidths-given docutils" id="id1">
-<caption><span class="caption-text">Frozen Delights!</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col width="11%" />
-<col width="42%" />
-<col width="21%" />
-<col width="26%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">parameter</th>
-<th class="head">description</th>
-<th class="head">default value</th>
-<th class="head">example</th>
-</tr>
-</thead>
+</dd></dl>
+
+<dl class="method">
+<dt id="ajson.aserializer.ASerializer.from_dict">
+<code class="descname">from_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ajson/aserializer.html#ASerializer.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ajson.aserializer.ASerializer.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an object with the type <cite>_type</cite> from a dictionary
+groups will be ignored for unserialization</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
 <tbody valign="top">
-<tr class="row-even"><td>name</td>
-<td>key used to serialized to and unserialize from</td>
-<td>attribute’s name</td>
-<td>name=my_attr</td>
-</tr>
-<tr class="row-odd"><td>groups</td>
-<td>list of names to define which attributes should be serialized</td>
-<td>None</td>
-<td>groups=[“admin”, “include_dates”]</td>
-</tr>
-<tr class="row-even"><td>required</td>
-<td>flag used to make sure a parameter is included in a json when unserializing</td>
-<td>Flase</td>
-<td>required</td>
-</tr>
-<tr class="row-odd"><td>d_format</td>
-<td>datetime format dates will be serialized to and unserialized from</td>
-<td>%Y-%m-%dT%H:%M:%S.%f (ISO FORMAT)</td>
-<td>d_format=%Y-%m-%d</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dict_obj</strong> – dict to be transformed into an object</li>
+<li><strong>_type</strong> – Resulting type of the object to construct</li>
+<li><strong>init_args_array</strong> – construct args list to initialize the object with type <cite>_type</cite></li>
+<li><strong>init_kargs</strong> – construct args to initialize the object with type <cite>_type</cite></li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<div class="section" id="example">
-<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@AJson</span><span class="p">()</span>
-<span class="k">class</span> <span class="nc">Restaurant</span><span class="p">:</span>
-    <span class="n">location</span><span class="p">:</span><span class="nb">str</span>   <span class="c1"># @aj(groups=[&#39;public&#39;], name=address, required) using inline comment</span>
-    <span class="n">tables_num</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        you can also use multi line comment to include the @aj annotation like this:</span>
-<span class="sd">        @aj(groups=[&#39;public&#39;], name=&quot;number of tables&quot;)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">opening_date</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        @aj(</span>
-<span class="sd">            d_format=&quot;%Y/%m/%d %I:%M%p&quot;</span>
-<span class="sd">            groups=&quot;[</span>
-<span class="sd">                &#39;admin&#39;,</span>
-<span class="sd">                &#39;include_dates&#39;</span>
-<span class="sd">            ]&quot;</span>
-<span class="sd">        )</span>
-<span class="sd">        Note that if you want to use a multi word value for the value of a parameter, you have to wrap it with double quotes (d_format=&quot;%Y/%m/%d %I:%M%p&quot;)</span>
-
-<span class="sd">        You can even use have multi-line values if you wrap them with double quotes too.</span>
-<span class="sd">        `</span>
-<span class="sd">            groups=&quot;[</span>
-<span class="sd">                &#39;admin&#39;,</span>
-<span class="sd">                &#39;include_dates&#39;</span>
-<span class="sd">            ]&quot;</span>
-<span class="sd">        `</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ajson</span> <span class="k">import</span> <span class="n">AJson</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@AJson</span><span class="p">()</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">Car</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="n">max_speed</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># @aj(&#39;)</span>
+<span class="gp">... </span>   <span class="n">brand</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj()</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">car</span><span class="p">:</span> <span class="n">Car</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;max_speed&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;brand&#39;</span><span class="p">:</span> <span class="s1">&#39;Jeep&#39;</span><span class="p">},</span> <span class="n">Car</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">car</span><span class="o">.</span><span class="n">max_speed</span>
+<span class="go">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">car</span><span class="o">.</span><span class="n">brand</span>
+<span class="go">&#39;Jeep&#39;</span>
+</pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ajson.aserializer.ASerializer.serialize">
+<code class="descname">serialize</code><span class="sig-paren">(</span><em>obj</em>, <em>groups: Optional[List[str]] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/ajson/aserializer.html#ASerializer.serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ajson.aserializer.ASerializer.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a json string from the obj</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> – Object to be serialize</li>
+<li><strong>groups</strong> – list of groups that determines what attributes should be serialize</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ajson</span> <span class="k">import</span> <span class="n">AJson</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@AJson</span><span class="p">()</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">House</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="n">rooms_num</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># @aj(groups=&#39;[&quot;public&quot;, &quot;owner&quot;]&#39;)</span>
+<span class="gp">... </span>   <span class="n">square_meters</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># @aj(groups=&#39;[&quot;owner&quot;]&#39;)</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rooms_num</span><span class="p">,</span> <span class="n">square_meters</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">rooms_num</span> <span class="o">=</span> <span class="n">rooms_num</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">square_meters</span> <span class="o">=</span> <span class="n">square_meters</span>
+</pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">House</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;public&#39;</span><span class="p">])</span>
+<span class="go">&#39;{&quot;room_num&quot;: 3}&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">House</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;owner&#39;</span><span class="p">])</span>
+<span class="go">&#39;{&quot;room_num&quot;: 3, &quot;square_meters&quot;: 100}&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ajson.aserializer.ASerializer.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ajson/aserializer.html#ASerializer.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ajson.aserializer.ASerializer.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as serialize, but it creates a serializable dict instead of a str</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> – Object to be serialize</li>
+<li><strong>groups</strong> – list of groups that determines what attributes should be serialize</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ajson</span> <span class="k">import</span> <span class="n">AJson</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@AJson</span><span class="p">()</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">Car</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="n">max_speed</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># @aj(groups=&#39;[&quot;basic&quot;, &quot;detailed&quot;]&#39;)</span>
+<span class="gp">... </span>   <span class="n">brand</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(groups=&#39;[&quot;detailed&quot;]&#39;)</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_speed</span><span class="p">,</span> <span class="n">brand</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">max_speed</span> <span class="o">=</span> <span class="n">max_speed</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">brand</span> <span class="o">=</span> <span class="n">brand</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">Car</span><span class="p">(</span><span class="mi">140</span><span class="p">,</span> <span class="s1">&#39;ford&#39;</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;basic&#39;</span><span class="p">])</span>
+<span class="go">{&quot;max_speed&quot;: 140}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">Car</span><span class="p">(</span><span class="mi">140</span><span class="p">,</span> <span class="s1">&#39;ford&#39;</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;detailed&#39;</span><span class="p">])</span>
+<span class="go">{&quot;max_speed&quot;: 140, &quot;brand&quot;: 7}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ajson.aserializer.ASerializer.unserialize">
+<code class="descname">unserialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ajson/aserializer.html#ASerializer.unserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ajson.aserializer.ASerializer.unserialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an object with the type <cite>_type</cite> from a string
+groups will be ignored for unserialization</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>json_str</strong> – string to be transformed into an object</li>
+<li><strong>_type</strong> – Resulting type of the object to construct</li>
+<li><strong>init_args_array</strong> – construct args list to initialize the object with type <cite>_type</cite></li>
+<li><strong>init_kargs</strong> – construct args to initialize the object with type <cite>_type</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ajson</span> <span class="k">import</span> <span class="n">AJson</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serializer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@AJson</span><span class="p">()</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">House</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="n">rooms_num</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># @aj()</span>
+<span class="gp">... </span>   <span class="n">square_meters</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># @aj()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">house</span><span class="p">:</span> <span class="n">House</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">unserialize</span><span class="p">(</span><span class="s1">&#39;{&quot;rooms_num&quot;: 1, &quot;square_meters&quot;:50}&#39;</span><span class="p">,</span> <span class="n">House</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">house</span><span class="o">.</span><span class="n">rooms_num</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">house</span><span class="o">.</span><span class="n">square_meters</span>
+<span class="go">50</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">AJson</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="class_annotations.html">Class Annotations</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ASerializer</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#decorator">decorator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#annotations">Annotations</a></li>
-</ul>
-</li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="class_annotations.html" title="previous chapter">Class Annotations</a></li>
-  </ul></li>
-</ul>
-</div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="class_annotations.html"
+                        title="previous chapter">Class Annotations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">Serialize Examples</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/aserializer.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <div class="searchformwrapper">
@@ -173,20 +240,24 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2018, Jorge Garcia Irazabal.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.7</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
-      
-      |
-      <a href="_sources/aserializer.rst.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="examples.html" title="Serialize Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="class_annotations.html" title="Class Annotations"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AJson 0.7.0 documentation</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Jorge Garcia Irazabal.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.7.
+    </div>
   </body>
 </html>

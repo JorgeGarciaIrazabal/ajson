@@ -13,11 +13,20 @@ How to install it:
 
     $ pip install ajson
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   class_annotations
+   aserializer
+   examples
+
+
 
 Description:
 ------------
 
-`AJson <https://github.com/JorgeGarciaIrazabal/ajson>`_ is a json serializer based on annotations, so you can easily control which and how class attributes should be serialized.
+`AJson <https://github.com/JorgeGarciaIrazabal/ajson>`_ is a json serializer based on annotations, where you can easily control which and how class attributes should be serialized.
 
 .. code-block:: python
 
@@ -66,19 +75,7 @@ Or unserialize.
     # this will raise a `AJsonEmptyRequiredAttributeError` Exception
 
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   class_annotations
-   aserializer
-
-
-
-
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

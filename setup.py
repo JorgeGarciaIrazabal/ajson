@@ -51,7 +51,7 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3.6',
     ],
-    keywords='json serializer annotation',
+    keywords='json serializer annotation validation',
     packages=find_packages(exclude="_static"),
     install_requires=[],
     test_suite="tests",

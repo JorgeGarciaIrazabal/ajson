@@ -117,9 +117,14 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         self.assertIsInstance(obj.nested_list[0].date, datetime)
         self.assertEqual(obj.nested_list[0].date.year, 2003)
 
-    def test_unserialize_with_required_throws_if_required_is_none(self):
+    def test_unserialize_with_required_throws_if_required_is_not_provided(self):
         dict_obj = {
             "b": 1,
         }
         with self.assertRaises(AJsonEmptyRequiredAttributeError):
             self.serializer.from_dict(dict_obj, USRequiredObject)
+
+    def test_unserialize_with_required_throws_if_required_is_null(self):
+        str_obj = '{"b": 1, "a": null }'
+        with self.assertRaises(AJsonEmptyRequiredAttributeError):
+            self.serializer.unserialize(str_obj, USRequiredObject)

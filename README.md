@@ -23,23 +23,23 @@ This library allows you to have those features in a simple and intuitive way.
 If you want to filter some sensible data in some scenarios, you can define `groups` per each attribute to control what is serialize and what is not
 
 ```python
-from ajson import AJson
-from ajson.aserializer import ASerializer
+from ajson import AJson, ASerializer
 
 @AJson()
 class Restaurant:
-    location:str   # @aj(groups=["public", "admin"])
-    tables: int  # @aj(groups=["public", "admin"])
+    location:str   # @aj(groups=["public","admin"])
+    tables: int  # @aj(groups=["public","admin"])
     owner: str  # @aj(groups=["admin"])
     def __init__(self, location, tables, owner):
         self.location = location
         self.tables = tables
         self.owner = owner
 
+serializer = ASerializer()
 restaurant = Restaurant("Manhattan", 30, "John Smith")
-print(ASerializer().serialize(restaurant, groups=["public"])) 
+print(serializer.serialize(restaurant, groups=["public"])) 
 # {"location": "Manhattan", "tables": 30}
-print(ASerializer().serialize(restaurant, groups=["admin"])) 
+print(serializer.serialize(restaurant, groups=["admin"])) 
 #  {"location": "Manhattan", "tables": 30, "owner": "John Smith"}
 ```
 
@@ -59,49 +59,58 @@ class Customer:
         self.last_name = "Smith"
         self.primary_email = "john.smith@something.com"
 
+serializer = ASerializer()
 customer = Customer()
-print(ASerializer().serialize(customer))
+print(serializer.serialize(customer))
 # {"firstName": "John", "lastName": "Smith", "email": "john.smith@something.com"}
 ```
 
 ###### Nested Objects With Groups And Names
 
 ```python
-from ajson import AJson
-from ajson.aserializer import ASerializer
+from typing import List
+from ajson import AJson, ASerializer
+
 
 @AJson()
 class Customer:
+    name: str  # @aj(name=firstName, groups=["public"])
+    primary_email: str
+    '''
+    You can also add the annotation in a multiline docstr
+    @aj(
+        name=email,
+        groups=["public"]
+    )
+    '''
+
     def __init__(self, name, primary_email):
-        self.name = name  # @aj(name=firstName, groups=["public"])
+        self.name = name
         self.primary_email = primary_email
-        '''
-        You can also add the annotation in a multiline docstr
-        @aj(
-            name=email,
-            groups=["admin"]
-        }
-        '''
 
 @AJson()
 class Restaurant:
+    location: str  # @aj(groups=["public","admin"])
+    owner: str  # @aj(groups=["admin"])
+    customer_list: List[Customer]  # @aj(groups=["with_customers"] name=customers)
+
     def __init__(self):
-        self.location = None  # @aj(groups=["public", "admin"])
-        self.owner = "John Smith"  # @aj(groups=["admin"])
-        self.customer_list = [ # @aj(groups=["with_customers"], name=customers)
+        self.location = None
+        self.owner = "John Smith"
+        self.customer_list = [
             Customer("Dani", "dani@something.com"),
             Customer("Mike", "maki@something.com")
         ]
 
 restaurant = Restaurant()
-print(ASerializer().serialize(restaurant, groups=["public"])) 
-# {"location": null, "tables": 30}
+print(ASerializer().serialize(restaurant, groups=["public"]))
+# '{"location": null}'
 
 # if you want to get the dictionary instead of a string, you can call `to_dict` instead of `serialize`
 print(ASerializer().to_dict(restaurant, groups=["public", "with_customers"]))
 '''
 {
-    "location": "Spain",
+    "location": None,
     "customers": [
         {"firstName": "Dani", "email": "dani@something.com"},
         {"firstName": "Mike", "email": "maki@something.com"}
@@ -114,8 +123,7 @@ print(ASerializer().to_dict(restaurant, groups=["public", "with_customers"]))
 
 ###### UnSerialization With Custom Names
 ```python
-from ajson import AJson
-from ajson.aserializer import ASerializer
+from ajson import AJson, ASerializer
 
 @AJson()
 class Customer:
@@ -123,8 +131,9 @@ class Customer:
     primary_email: str  # @aj(name=email)
     last_name: str  # @aj(name=lastName)
 
+serializer = ASerializer()
 serialize_str = '{"firstName": "John", "lastName": "Smith", "email": "john.smith@something.com"}'
-customer = ASerializer().unserialize(serialize_str, Customer)
+customer = serializer.unserialize(serialize_str, Customer)
 print(customer.name)  # "John"
 print(customer.last_name)  # "Smith"
 print(customer.primary_email)  # "john.smith@something.com"
@@ -134,13 +143,13 @@ print(customer.primary_email)  # "john.smith@something.com"
 
 ```python
 from typing import List
-from ajson import AJson
-from ajson.aserializer import ASerializer
+from ajson import AJson, ASerializer
 
 
 @AJson()
 class Customer:
     def __init__(self):
+        # we can also create the @aj annotation in the attribute's definition
         self.name = None  # @aj(name=firstName)
         self.primary_email = None  # @aj(name=email)
 
@@ -169,7 +178,8 @@ restaurant_str = '''
 }
 '''
 
-restaurant = ASerializer().unserialize(restaurant_str, Restaurant)
+serializer = ASerializer()
+restaurant = serializer.unserialize(restaurant_str, Restaurant)
 print(restaurant.owner)  # "John Smith"
 print(restaurant.customer_list[0].name)  # "Dani"
 ```
@@ -180,3 +190,13 @@ print(restaurant.customer_list[0].name)  # "Dani"
 
 2. Unserialize a Dict with key different than a string (Dict[int:str])
  
+ 
+#### Documentation
+
+Documentation and additional information is available [here](https://jorgegarciairazabal.github.io/ajson/)
+
+#### Contributing
+
+Any contribution, feature request, or bug report is always welcome.
+
+Please, feel free to create any issues or PRs. 

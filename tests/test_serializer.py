@@ -66,7 +66,7 @@ class TestSerialization(unittest.TestCase):
         self.assertTrue(datetime.now() - parsed_datetime < timedelta(milliseconds=25))
 
     def test_handler_modify_specific_types(self):
-        self.serializer.add_handler(datetime, lambda d, g, a: "test")
+        self.serializer.add_serialize_handler(datetime, lambda d, g, a: "test")
         date = datetime.now()
         date_dict = self.serializer.to_dict({"datetime": date})
         self.assertEqual(date_dict["datetime"], "test")
