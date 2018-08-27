@@ -28,14 +28,19 @@ from ajson.aserializer import ASerializer
 
 @AJson()
 class Restaurant:
-    def __init__(self):
-        self.location = "Manhattan"  # @aj(groups=["public", "admin"])
-        self.tables = 30  # @aj(groups=["public", "admin"])
-        self.owner = "John Smith"  # @aj(groups=["admin"])
+    location:str   # @aj(groups=["public", "admin"])
+    tables: int  # @aj(groups=["public", "admin"])
+    owner: str  # @aj(groups=["admin"])
+    def __init__(self, location, tables, owner):
+        self.location = location
+        self.tables = tables
+        self.owner = owner
 
-restaurant = Restaurant()
-print(ASerializer().serialize(restaurant, groups=["public"])) # {"location": "Manhattan", "tables": 30}
-print(ASerializer().serialize(restaurant, groups=["admin"])) #  {"location": "Manhattan", "tables": 30, "owner": "John Smith"}
+restaurant = Restaurant("Manhattan", 30, "John Smith")
+print(ASerializer().serialize(restaurant, groups=["public"])) 
+# {"location": "Manhattan", "tables": 30}
+print(ASerializer().serialize(restaurant, groups=["admin"])) 
+#  {"location": "Manhattan", "tables": 30, "owner": "John Smith"}
 ```
 
 ###### Rename Attributes With "Name"

@@ -1,0 +1,172 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Welcome to AJson’s documentation! &#8212; AJson 0.7.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Class Annotations" href="class_annotations.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-ajson-s-documentation">
+<h1>Welcome to AJson’s documentation!<a class="headerlink" href="#welcome-to-ajson-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/JorgeGarciaIrazabal/ajson">AJson</a> is a json serializer based on annotations, so you can easily control which and how class attributes should be serialized.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ajson</span> <span class="kn">import</span> <span class="n">AJson</span>
+<span class="kn">from</span> <span class="nn">ajson.aserializer</span> <span class="kn">import</span> <span class="n">ASerializer</span>
+
+<span class="nd">@AJson</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">Restaurant</span><span class="p">:</span>
+    <span class="n">location</span><span class="p">:</span><span class="nb">str</span>   <span class="c1"># @aj(groups=[&quot;public&quot;, &quot;admin&quot;])</span>
+    <span class="n">tables</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># @aj(groups=[&quot;public&quot;, &quot;admin&quot;])</span>
+    <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(groups=[&quot;admin&quot;], name=owner_name)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">tables</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tables</span> <span class="o">=</span> <span class="n">tables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">owner</span>
+
+<span class="n">serializer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span>
+<span class="n">restaurant</span> <span class="o">=</span> <span class="n">Restaurant</span><span class="p">(</span><span class="s2">&quot;Manhattan&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">restaurant</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;public&quot;</span><span class="p">]))</span>
+<span class="c1"># {&quot;location&quot;: &quot;Manhattan&quot;, &quot;tables&quot;: 30}</span>
+<span class="k">print</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">restaurant</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;admin&quot;</span><span class="p">]))</span>
+<span class="c1">#  {&quot;location&quot;: &quot;Manhattan&quot;, &quot;tables&quot;: 30, &quot;owner_name&quot;: &quot;John Smith&quot;}</span>
+</pre></div>
+</div>
+<p>Or unserialize.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ajson</span> <span class="kn">import</span> <span class="n">AJson</span>
+<span class="kn">from</span> <span class="nn">ajson.aserializer</span> <span class="kn">import</span> <span class="n">ASerializer</span>
+
+<span class="nd">@AJson</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">Customer</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(name=firstName, required)</span>
+    <span class="n">last_name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(name=lastName)</span>
+
+<span class="n">serializer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span>
+<span class="n">serialize_str</span> <span class="o">=</span> <span class="s1">&#39;{&quot;firstName&quot;: &quot;John&quot;, &quot;lastName&quot;: &quot;Smith&quot;}&#39;</span>
+<span class="n">customer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span><span class="o">.</span><span class="n">unserialize</span><span class="p">(</span><span class="n">serialize_str</span><span class="p">,</span> <span class="n">Customer</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">customer</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># &quot;John&quot;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">customer</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>  <span class="c1"># &quot;Smith&quot;</span>
+
+<span class="c1"># Validate jsons</span>
+<span class="c1"># Not passing the required attribute &quot;name</span>
+<span class="n">serialize_str</span> <span class="o">=</span> <span class="s1">&#39;{&quot;lastName&quot;: &quot;Smith&quot;}&#39;</span>
+<span class="n">customer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span><span class="o">.</span><span class="n">unserialize</span><span class="p">(</span><span class="n">serialize_str</span><span class="p">,</span> <span class="n">Customer</span><span class="p">)</span>
+<span class="c1"># this will raise a `AJsonEmptyRequiredAttributeError` Exception</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install ajson
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_annotations.html">Class Annotations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_annotations.html#decorator">decorator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class_annotations.html#annotations">Annotations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aserializer.html">ASerializer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aserializer.html#decorator">decorator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aserializer.html#annotations">Annotations</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">AJson</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_annotations.html">Class Annotations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aserializer.html">ASerializer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="class_annotations.html" title="next chapter">Class Annotations</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Jorge Garcia Irazabal.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
