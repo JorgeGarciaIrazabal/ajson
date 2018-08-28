@@ -1,7 +1,7 @@
 import collections
 import json
 from datetime import datetime
-from typing import Optional, List, Dict, Callable, Any, NewType, Type, Set, Tuple
+from typing import Optional, List, Dict, Callable, Any, NewType, Type, Set, Tuple, Union
 
 from ajson.json_class_reports import JsonTypeReports, _TypeReport, _AttrReport, ISO_FORMAT
 
@@ -65,7 +65,7 @@ class ASerializer:
         """
         return json.dumps(self._to_dict_recursive(obj, groups, 0))
 
-    def to_dict(self, obj, groups: Optional[List[str]] = None) -> Dict[str, Any]:
+    def to_dict(self, obj, groups: Optional[List[str]] = None) -> Union[Dict[str, Any], List]:
         """
         Same as serialize, but it creates a serializable dict instead of a str
 
@@ -90,9 +90,9 @@ class ASerializer:
         """
         return self._to_dict_recursive(obj, groups, 0)
 
-    def _to_dict_recursive(self, obj, groups: Optional[List[str]] = None, _depth=0, attr_report: _AttrReport = None):
-        _depth += 1
-        if _depth > self.max_depth:
+    def _to_dict_recursive(self, obj, groups: Optional[List[str]] = None, depth=0, attr_report: _AttrReport = None):
+        depth += 1
+        if depth > self.max_depth:
             return '...'
         for class_ in self._handlers:
             if isinstance(obj, class_):
@@ -104,17 +104,17 @@ class ASerializer:
         elif isinstance(obj, datetime):
             return self.__datetime_handler(obj, attr_report)
         elif isinstance(obj, (list, tuple, set)):
-            return self.__list_handler(obj, _depth)
+            return self.__list_handler(obj, groups, depth)
         elif isinstance(obj, dict):
-            return self.__dict_handler(obj, groups, _depth)
+            return self.__dict_handler(obj, groups, depth)
         else:
-            return self.__object_handler(obj, groups, _depth)
+            return self.__object_handler(obj, groups, depth)
 
-    def __list_handler(self, obj: list, depth):
+    def __list_handler(self, obj: list, groups: Optional[List[str]], depth: int):
         serialized_list = []
         obj = list(obj)
         for item in obj:
-            serialized_list.append(self._to_dict_recursive(item, _depth=depth))
+            serialized_list.append(self._to_dict_recursive(item, groups=groups, depth=depth))
         return serialized_list
 
     def __dict_handler(self,

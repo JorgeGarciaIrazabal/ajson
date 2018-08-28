@@ -45,6 +45,11 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         self.assertEqual(dict_obj["time1"], "2000/02/01")
         self.assertEqual(dict_obj["time2"], "2010--0240")
 
+    def test_list_ob_objects_is_serialized_with_the_right_groups(self):
+        list_obj = self.serializer.to_dict([SSimpleObjectAJsonWithGroups()], groups=["admin"])
+        self.assertEqual(len(list_obj), 1)
+        self.assertEqual(list_obj[0]["a"], 1)
+
     # Unserialize
     def test_simple_entity_is_unserialize_from_dict(self):
         dict_obj = {
