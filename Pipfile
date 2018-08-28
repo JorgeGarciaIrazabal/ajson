@@ -11,6 +11,7 @@ sphinx-autobuild = "*"
 
 [packages]
 "beautifulsoup4" = "*"
+"typeguard" = ">=2.2.0, <2.3.0"
 
 [requires]
 python_version = "3.6"

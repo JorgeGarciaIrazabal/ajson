@@ -1,6 +1,6 @@
+import collections
 import json
 from datetime import datetime
-import collections
 from typing import Optional, List, Dict, Callable, Any, NewType, Type, Set, Tuple
 
 from ajson.json_class_reports import JsonTypeReports, _TypeReport, _AttrReport, ISO_FORMAT
@@ -221,17 +221,10 @@ class ASerializer:
             return {k: self._from_dict_recursive(v) for k, v in dict_obj.items()}
         result_obj = _type(*init_args_array, **init_kargs)
         for key, value in dict_obj.items():
-            try:
-                attr_report = type_report.get_by_serialize_name(key)
-                if hasattr(_type, '__annotations__'):
-                    attr_type = _type.__annotations__.get(attr_report.attribute_name, None)
-                else:
-                    attr_type = None
-                result_dict = self._from_dict_recursive(value, _type=attr_type, attr_report=attr_report)
+            attr_report = type_report.get_by_serialize_name_or_default(key)
+            result_dict = self._from_dict_recursive(value, _type=attr_report.hint, attr_report=attr_report)
+            if hasattr(result_obj, attr_report.attribute_name) or attr_report.hint is not None:
                 setattr(result_obj, attr_report.attribute_name, result_dict)
-            except StopIteration:
-                if hasattr(result_obj, key):
-                    setattr(result_obj, key, self._from_dict_recursive(value))
 
         type_report.validate_instance(result_obj)
         return result_obj

@@ -1,8 +1,8 @@
 import inspect
-import json
 import logging
 import os
 from typing import Dict, Match, Optional
+
 from bs4 import BeautifulSoup
 
 from ajson.comment_handler import CommentHandler
@@ -34,7 +34,7 @@ class ClassInspector(object, metaclass=Singleton):
                 if attribute is not None:
                     report[attribute] = as_params_dict
             except Exception as e:
-                logging.warn("Unable to parse @aj {}".format(matches[0]))
+                logging.warning("Unable to parse @aj {}".format(matches[0]))
             source = source[matches.end():]
         return report
 

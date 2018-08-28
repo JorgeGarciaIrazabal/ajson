@@ -9,6 +9,7 @@ class SEmptyObjectAJson(object):
     def __init__(self):
         self.a = 1
 
+
 @AJson()
 class SSimpleObjectAJson(object):
     def __init__(self):
@@ -86,3 +87,15 @@ class USNestedListObject(object):
 class USRequiredObject(object):
     a: int  # @aj(required)
     b: int  # @aj()
+
+
+@AJson()
+class USWithoutAnnotationsObject(object):
+    a: int
+    b: int
+
+
+@AJson()
+class USWithHintsObject(object):
+    a: int
+    b: str
