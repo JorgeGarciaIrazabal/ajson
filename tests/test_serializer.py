@@ -63,7 +63,10 @@ class TestSerialization(unittest.TestCase):
         date = datetime.now()
         date_dict = self.serializer.to_dict({"datetime": date})
         parsed_datetime = datetime.strptime(date_dict["datetime"], ISO_FORMAT)
-        self.assertTrue(datetime.now() - parsed_datetime < timedelta(milliseconds=25))
+        self.assertTrue(
+            datetime.now() - parsed_datetime < timedelta(milliseconds=1000),
+            datetime.now() - parsed_datetime
+        )
 
     def test_handler_modify_specific_types(self):
         self.serializer.add_serialize_handler(datetime, lambda d, g, a: "test")
