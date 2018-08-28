@@ -12,6 +12,7 @@ from os import path
 
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
+
 import ajson
 
 here = path.abspath(path.dirname(__file__))
@@ -53,6 +54,9 @@ setup(
     ],
     keywords='json serializer annotation validation',
     packages=find_packages(exclude="_static"),
-    install_requires=[],
+    install_requires=[
+        'beautifulsoup4',
+        'typeguard >= 2.2.0, <2.3.0'
+    ],
     test_suite="tests",
 )
