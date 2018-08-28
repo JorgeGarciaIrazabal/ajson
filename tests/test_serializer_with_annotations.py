@@ -1,9 +1,8 @@
 import json
-import json
 import unittest
 
 from ajson.aserializer import ASerializer
-from ajson.json_class_reports import AJsonEmptyRequiredAttributeError
+from ajson.json_class_reports import AJsonEmptyRequiredAttributeError, AJsonValidationError
 from tests.types_for_tests.test_serializaer_with_annotations_types import *
 
 
@@ -128,3 +127,20 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         str_obj = '{"b": 1, "a": null }'
         with self.assertRaises(AJsonEmptyRequiredAttributeError):
             self.serializer.unserialize(str_obj, USRequiredObject)
+
+    def test_unserialize_object_without_annotations_should_be_generated_with_default_behaviour(self):
+        dict_obj = {
+            "b": 1,
+            "a": 10,
+        }
+        obj: USWithoutAnnotationsObject = self.serializer.from_dict(dict_obj, USWithoutAnnotationsObject)
+        self.assertEqual(obj.a, 10)
+        self.assertEqual(obj.b, 1)
+
+    def test_unserialize_raises_error_if_type_do_not_match(self):
+        dict_obj = {
+            "b": 1,
+            "a": 10,
+        }
+        with self.assertRaises(AJsonValidationError):
+            self.serializer.from_dict(dict_obj, USWithHintsObject)
