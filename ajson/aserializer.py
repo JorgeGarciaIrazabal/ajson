@@ -1,9 +1,9 @@
 import collections
 import json
 from datetime import datetime
-from typing import Optional, List, Dict, Callable, Any, NewType, Type, Set, Tuple
+from typing import Optional, List, Dict, Callable, Any, NewType, Type, Set, Tuple, Union
 
-from ajson.json_class_reports import JsonTypeReports, _TypeReport, _AttrReport, ISO_FORMAT
+from ajson.json_type_reports import JsonTypeReports, _TypeReport, _AttrReport, ISO_FORMAT
 
 Groups = NewType('Groups', Optional[List[str]])
 Handler = NewType('Handler', Callable[[Any, Groups, _AttrReport], Any])
@@ -65,7 +65,7 @@ class ASerializer:
         """
         return json.dumps(self._to_dict_recursive(obj, groups, 0))
 
-    def to_dict(self, obj, groups: Optional[List[str]] = None) -> Dict[str, Any]:
+    def to_dict(self, obj, groups: Optional[List[str]] = None) -> Union[Dict[str, Any], List]:
         """
         Same as serialize, but it creates a serializable dict instead of a str
 
@@ -90,9 +90,9 @@ class ASerializer:
         """
         return self._to_dict_recursive(obj, groups, 0)
 
-    def _to_dict_recursive(self, obj, groups: Optional[List[str]] = None, _depth=0, attr_report: _AttrReport = None):
-        _depth += 1
-        if _depth > self.max_depth:
+    def _to_dict_recursive(self, obj, groups: Optional[List[str]] = None, depth=0, attr_report: _AttrReport = None):
+        depth += 1
+        if depth > self.max_depth:
             return '...'
         for class_ in self._handlers:
             if isinstance(obj, class_):
@@ -104,17 +104,17 @@ class ASerializer:
         elif isinstance(obj, datetime):
             return self.__datetime_handler(obj, attr_report)
         elif isinstance(obj, (list, tuple, set)):
-            return self.__list_handler(obj, _depth)
+            return self.__list_handler(obj, groups, depth)
         elif isinstance(obj, dict):
-            return self.__dict_handler(obj, groups, _depth)
+            return self.__dict_handler(obj, groups, depth)
         else:
-            return self.__object_handler(obj, groups, _depth)
+            return self.__object_handler(obj, groups, depth)
 
-    def __list_handler(self, obj: list, depth):
+    def __list_handler(self, obj: list, groups: Optional[List[str]], depth: int):
         serialized_list = []
         obj = list(obj)
         for item in obj:
-            serialized_list.append(self._to_dict_recursive(item, _depth=depth))
+            serialized_list.append(self._to_dict_recursive(item, groups=groups, depth=depth))
         return serialized_list
 
     def __dict_handler(self,
@@ -142,15 +142,15 @@ class ASerializer:
         return obj.strftime(attr_report.datetime_format)
 
     def __object_handler(self, obj: object, groups: Optional[List[str]], depth):
-        attributes = {key: value for key, value in obj.__dict__.items()
-                      if not isinstance(value, collections.Callable) and
-                      not 'key'.startswith('_')}
         class_report = JsonTypeReports().reports.get(obj.__class__, None)
         if class_report is None:
+            attributes = {key: value for key, value in obj.__dict__.items()
+                          if not isinstance(value, collections.Callable) and
+                          not 'key'.startswith('_')}
             return self.__dict_handler(attributes, groups, depth)
         attributes_to_serialize = class_report.get_attribute_names(groups)
 
-        attributes = {key: val for key, val in attributes.items() if key in attributes_to_serialize}
+        attributes = {key: getattr(obj, key) for key in attributes_to_serialize}
         return self.__dict_handler(attributes, groups, depth, class_report)
 
     def unserialize(self, json_str: str, _type: Optional[Type] = None, *init_args_array, **init_kargs) -> Any:

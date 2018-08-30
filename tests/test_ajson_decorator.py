@@ -1,7 +1,7 @@
 import unittest
 
 from ajson.class_decorator import AJson
-from ajson.json_class_reports import JsonTypeReports, ISO_FORMAT
+from ajson.json_type_reports import JsonTypeReports, ISO_FORMAT
 
 
 class TestAJsonDecorator(unittest.TestCase):
@@ -58,5 +58,40 @@ class TestAJsonDecorator(unittest.TestCase):
         self.assertEqual(reports[AJDC].get("a").datetime_format, "Y-M-D")
         self.assertEqual(reports[AJDC].get("a").name, "annotation")
 
+    def test_class_with_parent_get_parent_properties(self):
+        @AJson()
+        class AIPP1:
+            a: int = 10  # @aj(name=aa)
+            b: int = 20  # @aj(name=bb)
 
+        @AJson()
+        class AIPP2(AIPP1):
+            c: int = 30  # @aj(name=cc)
+            d: int = 40  # @aj(name=dd)
 
+        reports = JsonTypeReports().reports
+        self.assertIn(AIPP1, reports)
+        self.assertIn(AIPP2, reports)
+        self.assertEqual(reports[AIPP1].get("a").name, 'aa')
+        self.assertEqual(reports[AIPP1].get("b").name, 'bb')
+        self.assertEqual(reports[AIPP2].get("a").name, 'aa')
+        self.assertEqual(reports[AIPP2].get("b").name, 'bb')
+        self.assertEqual(reports[AIPP2].get("c").name, 'cc')
+        self.assertEqual(reports[AIPP2].get("d").name, 'dd')
+
+    def test_class_with_parent_overwrites_parent_properties(self):
+        @AJson()
+        class AIWP1:
+            a: int = 10  # @aj(name=aa)
+
+        @AJson()
+        class AIWP2(AIWP1):
+            a: int = 30  # @aj(name=aaa)
+            d: int = 40  # @aj(name=dd)
+
+        reports = JsonTypeReports().reports
+        self.assertIn(AIWP1, reports)
+        self.assertIn(AIWP2, reports)
+        self.assertEqual(reports[AIWP1].get("a").name, 'aa')
+        self.assertEqual(reports[AIWP2].get("a").name, 'aaa')
+        self.assertEqual(reports[AIWP2].get("d").name, 'dd')
