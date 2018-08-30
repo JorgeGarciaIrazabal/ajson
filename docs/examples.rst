@@ -12,9 +12,9 @@ If you want to filter some sensible data in some scenarios, you can define `grou
 
     @AJson()
     class Restaurant:
-        location:str   # @aj(groups=["public","admin"])
-        tables: int  # @aj(groups=["public","admin"])
-        owner: str  # @aj(groups=["admin"])
+        location:str   # @aj(groups="['public','admin']")
+        tables: int  # @aj(groups="['public','admin']")
+        owner: str  # @aj(groups="['admin']")
         def __init__(self, location, tables, owner):
             self.location = location
             self.tables = tables
@@ -62,13 +62,13 @@ Nested Objects With Groups And Names
 
     @AJson()
     class Customer:
-        name: str  # @aj(name=firstName, groups=["public"])
+        name: str  # @aj(name=firstName, groups="['public']")
         primary_email: str
         '''
         You can also add the annotation in a multiline docstr
         @aj(
             name=email,
-            groups=["public"]
+            groups="['public']"
         )
         '''
 
@@ -78,9 +78,9 @@ Nested Objects With Groups And Names
 
     @AJson()
     class Restaurant:
-        location: str  # @aj(groups=["public","admin"])
-        owner: str  # @aj(groups=["admin"])
-        customer_list: List[Customer]  # @aj(groups=["with_customers"] name=customers)
+        location: str  # @aj(groups="['public','admin']")
+        owner: str  # @aj(groups="['admin']")
+        customer_list: List[Customer]  # @aj(groups="['with_customers']" name=customers)
 
         def __init__(self):
             self.location = None
@@ -119,8 +119,8 @@ Inherited aj properties
 
     @AJson()
     class VIPCustomer(Customer):
-        name: str = Customer.name  # @aj(name='VIP Name') overwriting the name of the attribute
-        vip_since: datetime = datetime  # @aj(name='VIP Since')
+        name: str = Customer.name  # @aj(name="VIP Name") overwriting the name of the attribute
+        vip_since: datetime = datetime  # @aj(name="VIP Since")
 
     vip_customer = VIPCustomer()
 

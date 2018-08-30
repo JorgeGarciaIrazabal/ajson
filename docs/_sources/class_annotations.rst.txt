@@ -22,7 +22,7 @@ Annotations
 
 Annotations are comments next to the class attributes with the format ```@aj({param1}={value1} {param2}={value2} ... )```
 
-.. csv-table:: Frozen Delights!
+.. csv-table:: @aj parameters
     :header: "parameter", "description", "default value", "example"
     :widths: 10, 40, 20, 25
 
@@ -53,9 +53,10 @@ Example
                     'include_dates'
                 ]"
             )
-            Note that if you want to use a multi word value for the value of a parameter, you have to wrap it with double quotes (d_format="%Y/%m/%d %I:%M%p")
+            Note that, if you want to use a multi word value (with a space) for a parameter,
+            you have to wrap it with double quotes (d_format="%Y/%m/%d %I:%M%p")
 
-            You can even use have multi-line values if you wrap them with double quotes too.
+            You can even use multi-line values if you wrap them with double quotes too.
             `
                 groups="[
                     'admin',

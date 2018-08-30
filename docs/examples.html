@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <title>Serialize Examples &#8212; AJson 0.10.0 documentation</title>
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+      <link rel="stylesheet" href="_static/alabaster.css" type="text/css"/>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -15,25 +15,22 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="ASerializer" href="aserializer.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="aserializer.html" title="ASerializer"
-             accesskey="P">previous</a> |</li>
-          <li class="nav-item nav-item-0"><a href="index.html">AJson 0.10.0 documentation</a> &#187;</li>
-      </ul>
-    </div>  
+      <link rel="prev" title="ASerializer" href="aserializer.html"/>
 
-    <div class="document">
+      <link rel="stylesheet" href="_static/custom.css" type="text/css"/>
+
+
+      <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9"/>
+
+  </head><body>
+
+
+  <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+
+
+            <div class="body" role="main">
             
   <div class="section" id="serialize-examples">
 <h1>Serialize Examples<a class="headerlink" href="#serialize-examples" title="Permalink to this headline">¶</a></h1>
@@ -44,9 +41,9 @@
 
 <span class="nd">@AJson</span><span class="p">()</span>
 <span class="k">class</span> <span class="nc">Restaurant</span><span class="p">:</span>
-    <span class="n">location</span><span class="p">:</span><span class="nb">str</span>   <span class="c1"># @aj(groups=[&quot;public&quot;,&quot;admin&quot;])</span>
-    <span class="n">tables</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># @aj(groups=[&quot;public&quot;,&quot;admin&quot;])</span>
-    <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(groups=[&quot;admin&quot;])</span>
+    <span class="n">location</span><span class="p">:</span><span class="nb">str</span>   <span class="c1"># @aj(groups=&quot;[&#39;public&#39;,&#39;admin&#39;]&quot;)</span>
+    <span class="n">tables</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># @aj(groups=&quot;[&#39;public&#39;,&#39;admin&#39;]&quot;)</span>
+    <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(groups=&quot;[&#39;admin&#39;]&quot;)</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">tables</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tables</span> <span class="o">=</span> <span class="n">tables</span>
@@ -91,13 +88,13 @@
 
 <span class="nd">@AJson</span><span class="p">()</span>
 <span class="k">class</span> <span class="nc">Customer</span><span class="p">:</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(name=firstName, groups=[&quot;public&quot;])</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(name=firstName, groups=&quot;[&#39;public&#39;]&quot;)</span>
     <span class="n">primary_email</span><span class="p">:</span> <span class="nb">str</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    You can also add the annotation in a multiline docstr</span>
 <span class="sd">    @aj(</span>
 <span class="sd">        name=email,</span>
-<span class="sd">        groups=[&quot;public&quot;]</span>
+<span class="sd">        groups=&quot;[&#39;public&#39;]&quot;</span>
 <span class="sd">    )</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -107,9 +104,10 @@
 
 <span class="nd">@AJson</span><span class="p">()</span>
 <span class="k">class</span> <span class="nc">Restaurant</span><span class="p">:</span>
-    <span class="n">location</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(groups=[&quot;public&quot;,&quot;admin&quot;])</span>
-    <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(groups=[&quot;admin&quot;])</span>
-    <span class="n">customer_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Customer</span><span class="p">]</span>  <span class="c1"># @aj(groups=[&quot;with_customers&quot;] name=customers)</span>
+    <span class="n">location</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(groups=&quot;[&#39;public&#39;,&#39;admin&#39;]&quot;)</span>
+    <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(groups=&quot;[&#39;admin&#39;]&quot;)</span>
+    <span class="n">customer_list</span><span class="p">:</span> <span class="n">List</span><span
+        class="p">[</span><span class="n">Customer</span><span class="p">]</span>  <span class="c1"># @aj(groups=&quot;[&#39;with_customers&#39;]&quot; name=customers)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="bp">None</span>
@@ -161,9 +159,9 @@
 <span class="k">class</span> <span class="nc">VIPCustomer</span><span class="p">(</span><span
                       class="n">Customer</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span
-                      class="n">Customer</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># @aj(name=&#39;VIP Name&#39;) overwriting the name of the attribute</span>
+                      class="n">Customer</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># @aj(name=&quot;VIP Name&quot;) overwriting the name of the attribute</span>
     <span class="n">vip_since</span><span class="p">:</span> <span class="n">datetime</span> <span
-                      class="o">=</span> <span class="n">datetime</span>  <span class="c1"># @aj(name=&#39;VIP Since&#39;)</span>
+                      class="o">=</span> <span class="n">datetime</span>  <span class="c1"># @aj(name=&quot;VIP Since&quot;)</span>
 
 <span class="n">vip_customer</span> <span class="o">=</span> <span class="n">VIPCustomer</span><span class="p">()</span>
 
@@ -261,7 +259,7 @@
 <span class="c1"># AJsonEmptyRequiredAttributeError is raised as `firstName` is not provided</span>
 <span class="n">serialize_str</span> <span class="o">=</span> <span class="s1">&#39;{&quot;firstName&quot;: &quot;John&quot;, &quot;lastName&quot;: &quot;Smith&quot;, &quot;email&quot;: null}&#39;</span>
 <span class="n">customer</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">unserialize</span><span class="p">(</span><span class="n">serialize_str</span><span class="p">,</span> <span class="n">Customer</span><span class="p">)</span>
-<span class="c1"># AJsonEmptyRequiredAttributeError is raised even in the value of the required attribute is null</span>
+<span class="c1"># AJsonEmptyRequiredAttributeError is raised even if the value of the required attribute is null</span>
 </pre></div>
 </div>
 </div>
@@ -292,38 +290,58 @@
 
 
           </div>
+
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Serialize Examples</a><ul>
-<li><a class="reference internal" href="#simple-serialization-with-groups">Simple Serialization With “Groups”</a></li>
-<li><a class="reference internal" href="#rename-attributes-with-name">Rename Attributes With “Name”</a></li>
-<li><a class="reference internal" href="#nested-objects-with-groups-and-names">Nested Objects With Groups And Names</a></li>
-    <li><a class="reference internal" href="#inherited-aj-properties">Inherited aj properties</a></li>
+            <h1 class="logo"><a href="index.html">AJson</a></h1>
+
+
+            <h3>Navigation</h3>
+            <p class="caption"><span class="caption-text">Contents:</span></p>
+            <ul class="current">
+                <li class="toctree-l1"><a class="reference internal" href="class_annotations.html">Class Annotations</a>
+                </li>
+                <li class="toctree-l1"><a class="reference internal" href="aserializer.html">ASerializer</a></li>
+                <li class="toctree-l1 current"><a class="current reference internal" href="#">Serialize Examples</a>
+                    <ul>
+                        <li class="toctree-l2"><a class="reference internal" href="#simple-serialization-with-groups">Simple
+                            Serialization With “Groups”</a></li>
+                        <li class="toctree-l2"><a class="reference internal" href="#rename-attributes-with-name">Rename
+                            Attributes With “Name”</a></li>
+                        <li class="toctree-l2"><a class="reference internal"
+                                                  href="#nested-objects-with-groups-and-names">Nested Objects With
+                            Groups And Names</a></li>
+                        <li class="toctree-l2"><a class="reference internal" href="#inherited-aj-properties">Inherited
+                            aj properties</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#unserialize-examples">Unserialize Examples</a><ul>
-<li><a class="reference internal" href="#unserialization-with-custom-names">Unserialization With Custom Names</a></li>
-<li><a class="reference internal" href="#nested-objects">Nested Objects</a></li>
-    <li><a class="reference internal" href="#validate-json-required-params">Validate Json (required params)</a></li>
-    <li><a class="reference internal" href="#validate-json-param-types">Validate Json (param types)</a></li>
+                <li class="toctree-l1"><a class="reference internal" href="#unserialize-examples">Unserialize
+                    Examples</a>
+                    <ul>
+                        <li class="toctree-l2"><a class="reference internal" href="#unserialization-with-custom-names">Unserialization
+                            With Custom Names</a></li>
+                        <li class="toctree-l2"><a class="reference internal" href="#nested-objects">Nested Objects</a>
+                        </li>
+                        <li class="toctree-l2"><a class="reference internal" href="#validate-json-required-params">Validate
+                            Json (required params)</a></li>
+                        <li class="toctree-l2"><a class="reference internal" href="#validate-json-param-types">Validate
+                            Json (param types)</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="aserializer.html"
-                        title="previous chapter">ASerializer</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/examples.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+            <div class="relations">
+                <h3>Related Topics</h3>
+                <ul>
+                    <li><a href="index.html">Documentation overview</a>
+                        <ul>
+                            <li>Previous: <a href="aserializer.html" title="previous chapter">ASerializer</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <div class="searchformwrapper">
@@ -340,21 +358,18 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="aserializer.html" title="ASerializer"
-             >previous</a> |</li>
-          <li class="nav-item nav-item-0"><a href="index.html">AJson 0.10.0 documentation</a> &#187;</li>
-      </ul>
+  <div class="footer">
+      &copy;2018, Jorge Garcia Irazabal.
+
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+
+      |
+      <a href="_sources/examples.rst.txt"
+         rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Jorge Garcia Irazabal.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.7.
-    </div>
+
+
   </body>
 </html>
