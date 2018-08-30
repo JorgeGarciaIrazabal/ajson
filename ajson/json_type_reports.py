@@ -83,18 +83,24 @@ class JsonTypeReports(object, metaclass=Singleton):
     def __init__(self):
         self.reports: Dict[type, _TypeReport] = {}
 
-    def add(self, hint: Type, class_report_dict: Dict):
-        class_report = {}
-        for key, attribute_report in class_report_dict.items():
-            class_report[key] = _AttrReport(key, hint=None, **attribute_report)
+    def add(self, _type: Type, type_report_dict: Dict):
+        type_report = {}
+        for key, attribute_report in type_report_dict.items():
+            type_report[key] = _AttrReport(key, hint=None, **attribute_report)
 
         # adding extra reports for the attributes that have a type but not a @aj annotation
-        if hasattr(hint, '__annotations__'):
-            for key, attr_hint in hint.__annotations__.items():
-                class_report[key] = class_report.get(key, _AttrReport(key, hint=None))
-                class_report[key].hint = attr_hint
+        if hasattr(_type, '__annotations__'):
+            for key, attr_hint in _type.__annotations__.items():
+                type_report[key] = type_report.get(key, _AttrReport(key, hint=None))
+                type_report[key].hint = attr_hint
 
-        self.reports[hint] = _TypeReport(class_report, hint)
+        self.reports[_type] = _TypeReport(type_report, _type)
+
+        # merge parent report with the new one
+        for parent_class in _type.__bases__:
+            if parent_class in self.reports:
+                self.reports[_type].report_map = {**self.reports[parent_class].report_map,
+                                                  **self.reports[_type].report_map}
 
     def clear(self):
         self.reports = {}

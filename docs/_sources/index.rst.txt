@@ -6,13 +6,6 @@
 Welcome to AJson's documentation!
 =================================
 
-How to install it:
-------------------
-
-.. code-block:: bash
-
-    $ pip install ajson
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -21,6 +14,12 @@ How to install it:
    aserializer
    examples
 
+How to install it:
+------------------
+
+.. code-block:: bash
+
+    $ pip install ajson
 
 
 Description:
@@ -59,7 +58,7 @@ Or unserialize.
 
     @AJson()
     class Customer:
-        name: str  # @aj(name=firstName, required)
+        name: str  # @aj(name=firstName)
         last_name: str  # @aj(name=lastName)
 
     serializer = ASerializer()

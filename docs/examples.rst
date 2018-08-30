@@ -90,12 +90,13 @@ Nested Objects With Groups And Names
                 Customer("Mike", "maki@something.com")
             ]
 
+    serializer = ASerializer()
     restaurant = Restaurant()
-    print(ASerializer().serialize(restaurant, groups=["public"]))
+    print(serializer.serialize(restaurant, groups=["public"]))
     # '{"location": null}'
 
     # if you want to get the dictionary instead of a string, you can call `to_dict` instead of `serialize`
-    print(ASerializer().to_dict(restaurant, groups=["public", "with_customers"]))
+    print(serializer.to_dict(restaurant, groups=["public", "with_customers"]))
     '''
     {
         "location": None,
@@ -105,6 +106,27 @@ Nested Objects With Groups And Names
         ]
     }
     '''
+
+Inherited aj properties
+-----------------------
+
+.. code-block:: python
+
+    @AJson()
+    class Customer:
+        name: str = "John Smith"  # @aj(name=firstName)
+        primary_email: str = "js@js.com"  # @aj(name=email)
+
+    @AJson()
+    class VIPCustomer(Customer):
+        name: str = Customer.name  # @aj(name='VIP Name') overwriting the name of the attribute
+        vip_since: datetime = datetime  # @aj(name='VIP Since')
+
+    vip_customer = VIPCustomer()
+
+    serializer = ASerializer()
+    print(serializer.serialize(vip_customer))
+    # {"VIP Name": "John Smith", "email": "js@js.com", "VIP Since": "200-10-03T00:00:00.000000"}
 
 Unserialize Examples
 ====================
@@ -175,8 +197,8 @@ Nested Objects
     print(restaurant.customer_list[0].name)  # "Dani"
 
 
-Validate Json
--------------
+Validate Json (required params)
+-------------------------------
 
 .. code-block:: python
 
@@ -197,4 +219,22 @@ Validate Json
     # AJsonEmptyRequiredAttributeError is raised as `firstName` is not provided
     serialize_str = '{"firstName": "John", "lastName": "Smith", "email": null}'
     customer = serializer.unserialize(serialize_str, Customer)
-    # AJsonEmptyRequiredAttributeError is raised even in the value of the required attribute is null
+    # AJsonEmptyRequiredAttributeError is raised even if the value of the required attribute is null
+
+Validate Json (param types)
+-------------------------------
+
+.. code-block:: python
+
+    from ajson import AJson, ASerializer
+
+    @AJson()
+    class Customer:
+        name: str  # @aj(name=firstName)
+        primary_email: str  # @aj(name=email)
+        last_name: str  # @aj(name=lastName)
+
+    serializer = ASerializer()
+    serialize_str = '{"firstName": 2, "lastName": "Smith", "email": "john.smith@something.com"}'
+    customer = serializer.unserialize(serialize_str, Customer)
+    # AJsonValidationError is raised as `firstName` is not a string

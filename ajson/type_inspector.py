@@ -10,9 +10,9 @@ from ajson.regex import as_comment_regex, find_attribute_regex
 from ajson.singleton import Singleton
 
 
-class ClassInspector(object, metaclass=Singleton):
+class TypeInspector(object, metaclass=Singleton):
 
-    def inspect_class(self, _class) -> Dict[str, Dict]:
+    def inspect_type(self, _class) -> Dict[str, Dict]:
         source = inspect.getsource(_class)
         clean_source = CommentHandler().format_class_source(source)
         return self._get_as_annotation_reports(clean_source)

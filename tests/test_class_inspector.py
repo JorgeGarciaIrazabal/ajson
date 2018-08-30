@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from ajson.class_inspector import ClassInspector
+from ajson.type_inspector import TypeInspector
 
 
 class TestClassInspector(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestClassInspector(unittest.TestCase):
                 self.a = 10  # testing @aj(groups=["test"] required)
                 self.b = 10  # @ac( "groups": ["test"])
 
-        report = ClassInspector().inspect_class(CIA)
+        report = TypeInspector().inspect_type(CIA)
         self.assertEqual(len(report.keys()), 1)
         self.assertDictEqual(report, {
             'a': {'groups': '["test"]', 'required': ''}
@@ -31,7 +31,7 @@ class TestClassInspector(unittest.TestCase):
                     )
                 '''
 
-        report = ClassInspector().inspect_class(CIB)
+        report = TypeInspector().inspect_type(CIB)
         self.assertEqual(len(report.keys()), 1)
         self.assertEqual(json.loads(report['a']['groups']), [1, 2, 3])
 
@@ -45,7 +45,7 @@ class TestClassInspector(unittest.TestCase):
                 '''
                 self.b = 6  # @aj(name=test)
 
-        report = ClassInspector().inspect_class(CID)
+        report = TypeInspector().inspect_type(CID)
         self.assertEqual(len(report.keys()), 1)
         self.assertDictEqual(report, {
             'b': {'name': 'test'}
