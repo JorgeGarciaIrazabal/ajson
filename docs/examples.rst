@@ -120,13 +120,13 @@ Inherited aj properties
     @AJson()
     class VIPCustomer(Customer):
         name: str = Customer.name  # @aj(name="VIP Name") overwriting the name of the attribute
-        vip_since: datetime = datetime  # @aj(name="VIP Since")
+        vip_since: datetime = datetime(year=2000, month=10, day=3)  # @aj(name="VIP Since")
 
     vip_customer = VIPCustomer()
 
     serializer = ASerializer()
     print(serializer.serialize(vip_customer))
-    # {"VIP Name": "John Smith", "email": "js@js.com", "VIP Since": "200-10-03T00:00:00.000000"}
+    # {"VIP Name": "John Smith", "email": "js@js.com", "VIP Since": "2000-10-03T00:00:00.000000"}
 
 Unserialize Examples
 ====================

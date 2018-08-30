@@ -58,6 +58,7 @@ Search.setIndex({
         custom: 3,
         customer_list: 2,
         d_format: 1,
+        dai: 2,
         dani: 2,
         data: 2,
         date: 1,
@@ -128,6 +129,7 @@ Search.setIndex({
         max_spe: 0,
         mike: 2,
         modifi: 0,
+        month: 2,
         multi: 1,
         multilin: 2,
         my_attr: 1,
@@ -224,6 +226,7 @@ Search.setIndex({
         with_custom: 2,
         word: 1,
         wrap: 1,
+        year: 2,
         you: [1, 2, 3]
     },
     titles: ["ASerializer", "Class Annotations", "Serialize Examples", "Welcome to AJson\u2019s documentation!"],
