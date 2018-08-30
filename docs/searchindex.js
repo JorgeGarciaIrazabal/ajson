@@ -153,7 +153,7 @@ Search.setIndex({
         param1: 1,
         param2: 1,
         param: 3,
-        paramet: [0, 1],
+        paramet: 0,
         pars: 1,
         pass: [1, 3],
         per: 2,
@@ -186,6 +186,7 @@ Search.setIndex({
         some: 2,
         someth: 2,
         sourc: 0,
+        space: 1,
         spain: 2,
         specif: 0,
         square_met: 0,
@@ -236,11 +237,9 @@ Search.setIndex({
         attribut: 2,
         custom: 2,
         decor: 1,
-        delight: 1,
         descript: 3,
         document: 3,
         exampl: [1, 2],
-        frozen: 1,
         group: 2,
         how: 3,
         indic: 3,
@@ -251,6 +250,7 @@ Search.setIndex({
         nest: 2,
         object: 2,
         param: 2,
+        paramet: 1,
         properti: 2,
         renam: 2,
         requir: 2,
@@ -262,4 +262,4 @@ Search.setIndex({
         valid: 2,
         welcom: 3
     }
-});
+})
