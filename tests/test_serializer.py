@@ -64,7 +64,7 @@ class TestSerialization(unittest.TestCase):
         date_dict = self.serializer.to_dict({"datetime": date})
         parsed_datetime = datetime.strptime(date_dict["datetime"], ISO_FORMAT)
         self.assertTrue(
-            datetime.now() - parsed_datetime < timedelta(milliseconds=1000),
+            datetime.now() - parsed_datetime < timedelta(minutes=5),
             datetime.now() - parsed_datetime
         )
 

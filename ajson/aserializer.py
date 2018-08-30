@@ -149,6 +149,9 @@ class ASerializer:
                           not 'key'.startswith('_')}
             return self.__dict_handler(attributes, groups, depth)
         attributes_to_serialize = class_report.get_attribute_names(groups)
+        if attributes_to_serialize is None:
+            attributes_to_serialize = (k for k in (*obj.__dict__.keys(), *obj.__class__.__dict__.keys()) if
+                                       not k.startswith('_'))
 
         attributes = {key: getattr(obj, key) for key in attributes_to_serialize}
         return self.__dict_handler(attributes, groups, depth, class_report)
