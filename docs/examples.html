@@ -161,7 +161,12 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span
                       class="n">Customer</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># @aj(name=&quot;VIP Name&quot;) overwriting the name of the attribute</span>
     <span class="n">vip_since</span><span class="p">:</span> <span class="n">datetime</span> <span
-                      class="o">=</span> <span class="n">datetime</span>  <span class="c1"># @aj(name=&quot;VIP Since&quot;)</span>
+                      class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span
+                      class="n">year</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span
+                      class="n">month</span><span class="o">=</span><span class="mi">10</span><span
+                      class="p">,</span> <span class="n">day</span><span class="o">=</span><span
+                      class="mi">3</span><span class="p">)</span>  <span
+                      class="c1"># @aj(name=&quot;VIP Since&quot;)</span>
 
 <span class="n">vip_customer</span> <span class="o">=</span> <span class="n">VIPCustomer</span><span class="p">()</span>
 
@@ -169,7 +174,7 @@
 <span class="k">print</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span
                       class="n">serialize</span><span class="p">(</span><span class="n">vip_customer</span><span
                       class="p">))</span>
-<span class="c1"># {&quot;VIP Name&quot;: &quot;John Smith&quot;, &quot;email&quot;: &quot;js@js.com&quot;, &quot;VIP Since&quot;: &quot;200-10-03T00:00:00.000000&quot;}</span>
+<span class="c1"># {&quot;VIP Name&quot;: &quot;John Smith&quot;, &quot;email&quot;: &quot;js@js.com&quot;, &quot;VIP Since&quot;: &quot;2000-10-03T00:00:00.000000&quot;}</span>
 </pre></div>
 </div>
 </div>
