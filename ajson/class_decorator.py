@@ -1,13 +1,10 @@
-from builtins import str
-from typing import Optional
-
-from ajson.class_inspector import ClassInspector
-from ajson.json_class_reports import JsonTypeReports
+from ajson.json_type_reports import JsonTypeReports
+from ajson.type_inspector import TypeInspector
 
 
 def AJson():
     def wrapper(cls: type):
-        report = ClassInspector().inspect_class(cls)
+        report = TypeInspector().inspect_type(cls)
         JsonTypeReports().add(cls, report)
         return cls
 

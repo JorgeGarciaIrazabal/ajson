@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Welcome to AJson’s documentation! &#8212; AJson 0.8.0 documentation</title>
+      <title>Welcome to AJson’s documentation! &#8212; AJson 0.10.0 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="class_annotations.html" title="Class Annotations"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">AJson 0.8.0 documentation</a> &#187;</li> 
+          <li class="nav-item nav-item-0"><a href="#">AJson 0.10.0 documentation</a> &#187;</li>
       </ul>
     </div>  
 
@@ -37,11 +37,6 @@
             
   <div class="section" id="welcome-to-ajson-s-documentation">
 <h1>Welcome to AJson’s documentation!<a class="headerlink" href="#welcome-to-ajson-s-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="how-to-install-it">
-<h2>How to install it:<a class="headerlink" href="#how-to-install-it" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install ajson
-</pre></div>
-</div>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -55,16 +50,29 @@
 <li class="toctree-l2"><a class="reference internal" href="examples.html#simple-serialization-with-groups">Simple Serialization With “Groups”</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#rename-attributes-with-name">Rename Attributes With “Name”</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#nested-objects-with-groups-and-names">Nested Objects With Groups And Names</a></li>
+    <li class="toctree-l2"><a class="reference internal" href="examples.html#inherited-aj-properties">Inherited aj
+        properties</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html#unserialize-examples">Unserialize Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#unserialization-with-custom-names">Unserialization With Custom Names</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#nested-objects">Nested Objects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#validate-json">Validate Json</a></li>
+    <li class="toctree-l2"><a class="reference internal" href="examples.html#validate-json-required-params">Validate
+        Json (required params)</a></li>
+    <li class="toctree-l2"><a class="reference internal" href="examples.html#validate-json-param-types">Validate Json
+        (param types)</a></li>
 </ul>
 </li>
 </ul>
 </div>
+      <div class="section" id="how-to-install-it">
+          <h2>How to install it:<a class="headerlink" href="#how-to-install-it" title="Permalink to this headline">¶</a>
+          </h2>
+          <div class="highlight-bash notranslate">
+              <div class="highlight"><pre><span></span>$ pip install ajson
+</pre>
+              </div>
+          </div>
 </div>
 <div class="section" id="description">
 <h2>Description:<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
@@ -96,7 +104,7 @@
 
 <span class="nd">@AJson</span><span class="p">()</span>
 <span class="k">class</span> <span class="nc">Customer</span><span class="p">:</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(name=firstName, required)</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(name=firstName)</span>
     <span class="n">last_name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># @aj(name=lastName)</span>
 
 <span class="n">serializer</span> <span class="o">=</span> <span class="n">ASerializer</span><span class="p">()</span>
@@ -172,7 +180,7 @@
         <li class="right" >
           <a href="class_annotations.html" title="Class Annotations"
              >next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">AJson 0.8.0 documentation</a> &#187;</li> 
+          <li class="nav-item nav-item-0"><a href="#">AJson 0.10.0 documentation</a> &#187;</li>
       </ul>
     </div>
     <div class="footer" role="contentinfo">

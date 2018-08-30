@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional, Union
 
 from ajson import AJson
 
@@ -99,3 +99,14 @@ class USWithoutAnnotationsObject(object):
 class USWithHintsObject(object):
     a: int
     b: str
+
+
+@AJson()
+class USWithOptionalHintsObject(object):
+    a: Optional[int]
+    b: str
+
+
+@AJson()
+class USWithMultiTypeHintsObject(object):
+    a: Union[int, str]

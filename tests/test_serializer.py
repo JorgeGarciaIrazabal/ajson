@@ -3,7 +3,7 @@ import unittest
 from datetime import timedelta, datetime
 
 from ajson.aserializer import ASerializer
-from ajson.json_class_reports import JsonTypeReports, ISO_FORMAT
+from ajson.json_type_reports import JsonTypeReports, ISO_FORMAT
 
 
 class TestSerialization(unittest.TestCase):

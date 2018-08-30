@@ -142,7 +142,7 @@ print(customer.primary_email)  # "john.smith@something.com"
 ###### Nested Objects
 
 ```python
-from typing import List
+from typing import List, Optional
 from ajson import AJson, ASerializer
 
 
@@ -155,18 +155,14 @@ class Customer:
 
 @AJson()
 class Restaurant:
-    customer_list: List[Customer]  # if we want to have nested objects, we need to define the types with the annotations
+    customer_list: List[Customer]  # if we want to have nested objects, we need to define the types hints
     '''
         @aj(name=customers)
         we can create the @aj annotation in the attribute's definition
     '''
-    owner: str
-    location: str
-
-    def __init__(self):
-        self.location = None
-        self.owner = "John Smith"
-        self.customer_list = []
+    owner: str = "John Smith"
+    location: Optional[str] = None
+        
 
 restaurant_str = '''
 {
@@ -189,7 +185,8 @@ print(restaurant.customer_list[0].name)  # "Dani"
 1. Unserialize a Dict with types (Dict[str:MyObject]) is not supported, it will just unserialize it as a dict.
 
 2. Unserialize a Dict with key different than a string (Dict[int:str])
- 
+
+3. Properties serialization is not supported yet.
  
 #### Documentation
 

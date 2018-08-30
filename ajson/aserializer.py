@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from typing import Optional, List, Dict, Callable, Any, NewType, Type, Set, Tuple, Union
 
-from ajson.json_class_reports import JsonTypeReports, _TypeReport, _AttrReport, ISO_FORMAT
+from ajson.json_type_reports import JsonTypeReports, _TypeReport, _AttrReport, ISO_FORMAT
 
 Groups = NewType('Groups', Optional[List[str]])
 Handler = NewType('Handler', Callable[[Any, Groups, _AttrReport], Any])
@@ -142,15 +142,15 @@ class ASerializer:
         return obj.strftime(attr_report.datetime_format)
 
     def __object_handler(self, obj: object, groups: Optional[List[str]], depth):
-        attributes = {key: value for key, value in obj.__dict__.items()
-                      if not isinstance(value, collections.Callable) and
-                      not 'key'.startswith('_')}
         class_report = JsonTypeReports().reports.get(obj.__class__, None)
         if class_report is None:
+            attributes = {key: value for key, value in obj.__dict__.items()
+                          if not isinstance(value, collections.Callable) and
+                          not 'key'.startswith('_')}
             return self.__dict_handler(attributes, groups, depth)
         attributes_to_serialize = class_report.get_attribute_names(groups)
 
-        attributes = {key: val for key, val in attributes.items() if key in attributes_to_serialize}
+        attributes = {key: getattr(obj, key) for key in attributes_to_serialize}
         return self.__dict_handler(attributes, groups, depth, class_report)
 
     def unserialize(self, json_str: str, _type: Optional[Type] = None, *init_args_array, **init_kargs) -> Any:
