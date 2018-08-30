@@ -1,15 +1,18 @@
-import ajson
 import sys
 from subprocess import check_call
+
+import ajson
 
 
 def increment_version():
     parsed_version = ajson.__version__.split(".")
+    if len(sys.argv) < 2:
+        return ajson.__version__
     if sys.argv[1] == "hotfix":
         index = 2
     elif sys.argv[1] == "minor":
         index = 1
-    elif sys.argv[0] == "mayor":
+    elif sys.argv[1] == "mayor":
         index = 0
     else:
         raise ValueError("argument has to be either 'hotfix', 'minor' or 'mayor'")
@@ -38,4 +41,4 @@ if __name__ == "__main__":
     check_call(["git", "push", "origin", "--tags"])
     print("pushed tag: v{}".format(version))
     check_call(["make", "upload"])
-    print("uploaded to ")
+    print("uploaded")

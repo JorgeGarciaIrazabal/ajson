@@ -16,3 +16,6 @@ deploy-minor:
 
 deploy-mayor:
 	python deploy.py mayor
+
+deploy:
+	python deploy.py
