@@ -25,6 +25,14 @@ class SSimpleObjectAJsonWithGroups(object):
 
 
 @AJson()
+class SObjectWithGroupsAndNoGroups(object):
+    def __init__(self):
+        self.a = 1  # @aj(groups=["admin"])
+        self.b = 2  # @aj(groups=["public"])
+        self.c = 8  # @aj()
+        self.d = 9
+
+@AJson()
 class SSimpleObjectAJsonNested1(object):
     def __init__(self):
         self.a = 1  # @aj(groups=["admin"])

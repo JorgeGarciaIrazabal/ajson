@@ -44,14 +44,14 @@ class _TypeReport(object):
         self.hint = hint
 
     def get(self, attr_name: str) -> _AttrReport:
-        return self.report_map[attr_name]
+        return self.report_map.get(attr_name, _AttrReport(attr_name, None))
 
-    def get_attribute_names(self, groups: Optional[List[str]] = None) -> List[str]:
+    def get_attribute_names(self, groups: Optional[List[str]] = None) -> Optional[List[str]]:
         if groups is None:
-            return list(self.report_map.keys())
+            return None
         return [
             key for key, report in self.report_map.items()
-            if report.groups is None or
+            if report.groups is not None and
                len(report.groups.intersection(groups)) > 0
         ]
 
