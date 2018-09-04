@@ -11,14 +11,22 @@ class TestSerializationWithAnnotations(unittest.TestCase):
     def setUp(self):
         self.serializer = ASerializer()
 
-    def test_empty_object_with_ajson_returns_empty_object(self):
+    def test_empty_object_with_ajson_serialize_obj_if_no_groups_passed(self):
         serialization = self.serializer.serialize(SEmptyObjectAJson())
-        self.assertEqual(len(json.loads(serialization).keys()), 0)
-
-    def test_object_with_ajson_returns_only_as_attributes(self):
-        serialization = self.serializer.serialize(SSimpleObjectAJson())
         self.assertEqual(len(json.loads(serialization).keys()), 1)
         self.assertEqual(json.loads(serialization)['a'], 1)
+
+        serialization = self.serializer.serialize(SEmptyObjectAJson(), groups=[])
+        self.assertEqual(len(json.loads(serialization).keys()), 0)
+
+    def test_object_with_empty_aj_annotation_is_serialized_too_if_no_group_is_passed(self):
+        serialization = self.serializer.serialize(SSimpleObjectAJson())
+        self.assertEqual(len(json.loads(serialization).keys()), 2)
+        self.assertEqual(json.loads(serialization)['a'], 1)
+        self.assertEqual(json.loads(serialization)['b'], 1)
+
+        serialization = self.serializer.serialize(SSimpleObjectAJson(), groups=[])
+        self.assertEqual(len(json.loads(serialization).keys()), 0)
 
     def test_object_with_ajson_returns_only_attributes_in_group(self):
         serialization = self.serializer.serialize(SSimpleObjectAJsonWithGroups(), groups=['admin'])
@@ -49,6 +57,28 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         list_obj = self.serializer.to_dict([SSimpleObjectAJsonWithGroups()], groups=['admin'])
         self.assertEqual(len(list_obj), 1)
         self.assertEqual(list_obj[0]['a'], 1)
+
+    def test_serialize_only_attrs_with_the_right_groups(self):
+        obj_dict = self.serializer.to_dict(SObjectWithGroupsAndNoGroups(), groups=['admin'])
+        self.assertEqual(len(obj_dict.keys()), 1)
+        self.assertEqual(obj_dict['a'], 1)
+
+        obj_dict = self.serializer.to_dict(SObjectWithGroupsAndNoGroups(), groups=['public'])
+        self.assertEqual(len(obj_dict.keys()), 1)
+        self.assertEqual(obj_dict['b'], 2)
+
+        obj_dict = self.serializer.to_dict(SObjectWithGroupsAndNoGroups())
+        self.assertEqual(len(obj_dict.keys()), 4)
+
+    def test_serialize_properties_too(self):
+        obj_dict = self.serializer.to_dict(SObjectWithProperties())
+        self.assertEqual(len(obj_dict.keys()), 2)
+        self.assertEqual(obj_dict['a'], 1)
+        self.assertEqual(obj_dict['b'], 2)
+
+        obj_dict = self.serializer.to_dict(SObjectWithProperties(), groups=['g1'])
+        self.assertEqual(len(obj_dict.keys()), 1)
+        self.assertEqual(obj_dict['b'], 2)
 
     # Unserialize
     def test_simple_entity_is_unserialize_from_dict(self):
@@ -159,3 +189,11 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         self.assertEqual(obj.a, 'str')
         with self.assertRaises(AJsonValidationError):
             self.serializer.from_dict({'a': 10.13}, USWithMultiTypeHintsObject)
+
+    def test_unserialize_properties(self):
+        obj: USWithProperties = self.serializer.from_dict({'a': 10, 'b': 5}, USWithProperties)
+        self.assertEqual(obj.a, 10)
+        self.assertEqual(obj.b, 2)  # not updated as it is not using the name
+        obj: USWithProperties = self.serializer.from_dict({'a': 4, 'new_b': 20}, USWithProperties)
+        self.assertEqual(obj.a, 4)
+        self.assertEqual(obj.b, 20)

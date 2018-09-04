@@ -25,6 +25,32 @@ class SSimpleObjectAJsonWithGroups(object):
 
 
 @AJson()
+class SObjectWithGroupsAndNoGroups(object):
+    def __init__(self):
+        self.a = 1  # @aj(groups=["admin"])
+        self.b = 2  # @aj(groups=["public"])
+        self.c = 8  # @aj()
+        self.d = 9
+
+
+@AJson()
+class SObjectWithProperties(object):
+    def __init__(self):
+        self._a = 1
+        self._b = 2
+
+    @property
+    def a(self):
+        """ @aj() """
+        return self._a
+
+    @property
+    def b(self):
+        """ @aj(groups='["g1"]') """
+        return self._b
+
+
+@AJson()
 class SSimpleObjectAJsonNested1(object):
     def __init__(self):
         self.a = 1  # @aj(groups=["admin"])
@@ -110,3 +136,36 @@ class USWithOptionalHintsObject(object):
 @AJson()
 class USWithMultiTypeHintsObject(object):
     a: Union[int, str]
+
+
+@AJson()
+class USWithProperties(object):
+    def __init__(self):
+        self._a = 1
+        self._b = 2
+
+    @property
+    def a(self) -> int:
+        """ @aj() """
+        return self._a
+
+    @property
+    def b(self):
+        """ @aj(name=new_b) """
+        return self._b
+
+    @a.setter
+    def a(self, a):
+        self._a = a
+
+    @b.setter
+    def b(self, b):
+        self._b = b
+
+    def this_is_a_func(self) -> str:
+        return "testing"
+
+
+def div(a: int, b: int) -> float:
+    """Divide a by b"""
+    return a / b
