@@ -1,4 +1,5 @@
 import json
+from inspect import isfunction
 from typing import Dict, List, Optional, Set, Type
 
 from typeguard import check_type
@@ -55,10 +56,14 @@ class _TypeReport(object):
                len(report.groups.intersection(groups)) > 0
         ]
 
-    def get_by_serialize_name_or_default(self, name: str) -> _AttrReport:
+    def get_by_serialize_name_or_default(self, name: str) -> Optional[_AttrReport]:
         try:
             return next(x for x in self.report_map.values() if x.name == name)
-        except StopIteration:
+        except StopIteration as e:
+            if name in self.report_map:
+                # if there is a report for that variable but not with that name, ignore it
+                raise e
+            # if there is no conflict, create a new basic __AttrReport in case the entity got that attr dynamically
             return _AttrReport(name, hint=None)
 
     # todo move this function to the serializer, it doesn't make sense to have this in a report
@@ -88,19 +93,30 @@ class JsonTypeReports(object, metaclass=Singleton):
         for key, attribute_report in type_report_dict.items():
             type_report[key] = _AttrReport(key, hint=None, **attribute_report)
 
+        # merge parent report with the new one
+        for parent_class in _type.__bases__:
+            if parent_class in self.reports:
+                type_report = {**self.reports[parent_class].report_map, **type_report}
+
         # adding extra reports for the attributes that have a type but not a @aj annotation
         if hasattr(_type, '__annotations__'):
             for key, attr_hint in _type.__annotations__.items():
                 type_report[key] = type_report.get(key, _AttrReport(key, hint=None))
                 type_report[key].hint = attr_hint
 
+        # adding extra reports for the for the properties that don't have @aj annotation
+        for key, value in vars(_type).items():
+            if key.startswith('_'):
+                continue
+            if isinstance(value, property):
+                type_report[key] = type_report.get(key, _AttrReport(key, hint=None))
+                if hasattr(value.fget, '__annotations__'):
+                    type_report[key].hint = value.fget.__annotations__
+            elif not isfunction(value):
+                type_report[key] = type_report.get(key, _AttrReport(key, hint=None))
+                if hasattr(_type, '__annotations__') and _type.__annotations__.get(key, False):
+                    type_report[key].hint = _type.__annotations__[key]
         self.reports[_type] = _TypeReport(type_report, _type)
-
-        # merge parent report with the new one
-        for parent_class in _type.__bases__:
-            if parent_class in self.reports:
-                self.reports[_type].report_map = {**self.reports[parent_class].report_map,
-                                                  **self.reports[_type].report_map}
 
     def clear(self):
         self.reports = {}
