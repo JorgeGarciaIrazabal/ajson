@@ -50,3 +50,19 @@ class TestClassInspector(unittest.TestCase):
         self.assertDictEqual(report, {
             'b': {'name': 'test'}
         })
+
+    def test_annotation_gets_properties_too(self):
+        class CIEP:
+            def __init__(self):
+                self._a = 10
+
+            @property
+            def a(self):
+                """ @aj(name=new_a) """
+                return self._a + 10
+
+        report = TypeInspector().inspect_type(CIEP)
+        self.assertEqual(len(report.keys()), 1)
+        self.assertDictEqual(report, {
+            'a': {'name': 'new_a'}
+        })

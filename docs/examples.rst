@@ -41,13 +41,12 @@ Rename Attributes With "Name"
         name: str  # @aj(name=firstName)
         primary_email: str  # @aj(name=email)
         last_name: str  # @aj(name=lastName)
-        def __init__(self):
-            self.name = "John"
-            self.last_name = "Smith"
-            self.primary_email = "john.smith@something.com"
 
     serializer = ASerializer()
     customer = Customer()
+    customer.name = "John"
+    customer.last_name = "Smith"
+    customer.primary_email = "john.smith@something.com"
     print(serializer.serialize(customer))
     # {"firstName": "John", "lastName": "Smith", "email": "john.smith@something.com"}
 
@@ -107,7 +106,32 @@ Nested Objects With Groups And Names
     }
     '''
 
-Inherited aj properties
+With properties
+--------------------
+
+.. code-block:: python
+
+    from ajson import AJson
+    from ajson.aserializer import ASerializer
+
+    @AJson()
+    class Customer:
+        name: str  # @aj(name=firstName)
+        last_name: str  # @aj(name=lastName)
+
+        @property
+        def full_name(self):
+            """ @aj(name=fullName) """
+            return f'{self.name} {self.last_name}'
+
+    serializer = ASerializer()
+    customer = Customer()
+    customer.name = "John"
+    customer.last_name = "Smith"
+    print(serializer.serialize(customer))
+    # {"firstName": "John", "lastName": "Smith", "fullName": "John Smith"}
+
+Inherited aj attributes
 -----------------------
 
 .. code-block:: python

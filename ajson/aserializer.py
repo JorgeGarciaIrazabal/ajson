@@ -1,9 +1,9 @@
 import collections
 import json
 from datetime import datetime
-from typing import Optional, List, Dict, Callable, Any, NewType, Type, Set, Tuple, Union
+from typing import Any, Callable, Dict, List, NewType, Optional, Set, Tuple, Type, Union
 
-from ajson.json_type_reports import JsonTypeReports, _TypeReport, _AttrReport, ISO_FORMAT
+from ajson.json_type_reports import ISO_FORMAT, JsonTypeReports, _AttrReport, _TypeReport
 
 Groups = NewType('Groups', Optional[List[str]])
 Handler = NewType('Handler', Callable[[Any, Groups, _AttrReport], Any])
@@ -224,7 +224,11 @@ class ASerializer:
             return {k: self._from_dict_recursive(v) for k, v in dict_obj.items()}
         result_obj = _type(*init_args_array, **init_kargs)
         for key, value in dict_obj.items():
-            attr_report = type_report.get_by_serialize_name_or_default(key)
+            try:
+                attr_report = type_report.get_by_serialize_name_or_default(key)
+            except StopIteration:
+                # do nothing if report is not found
+                continue
             result_dict = self._from_dict_recursive(value, _type=attr_report.hint, attr_report=attr_report)
             if hasattr(result_obj, attr_report.attribute_name) or attr_report.hint is not None:
                 setattr(result_obj, attr_report.attribute_name, result_dict)

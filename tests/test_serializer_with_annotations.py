@@ -70,6 +70,16 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         obj_dict = self.serializer.to_dict(SObjectWithGroupsAndNoGroups())
         self.assertEqual(len(obj_dict.keys()), 4)
 
+    def test_serialize_properties_too(self):
+        obj_dict = self.serializer.to_dict(SObjectWithProperties())
+        self.assertEqual(len(obj_dict.keys()), 2)
+        self.assertEqual(obj_dict['a'], 1)
+        self.assertEqual(obj_dict['b'], 2)
+
+        obj_dict = self.serializer.to_dict(SObjectWithProperties(), groups=['g1'])
+        self.assertEqual(len(obj_dict.keys()), 1)
+        self.assertEqual(obj_dict['b'], 2)
+
     # Unserialize
     def test_simple_entity_is_unserialize_from_dict(self):
         dict_obj = {
@@ -179,3 +189,11 @@ class TestSerializationWithAnnotations(unittest.TestCase):
         self.assertEqual(obj.a, 'str')
         with self.assertRaises(AJsonValidationError):
             self.serializer.from_dict({'a': 10.13}, USWithMultiTypeHintsObject)
+
+    def test_unserialize_properties(self):
+        obj: USWithProperties = self.serializer.from_dict({'a': 10, 'b': 5}, USWithProperties)
+        self.assertEqual(obj.a, 10)
+        self.assertEqual(obj.b, 2)  # not updated as it is not using the name
+        obj: USWithProperties = self.serializer.from_dict({'a': 4, 'new_b': 20}, USWithProperties)
+        self.assertEqual(obj.a, 4)
+        self.assertEqual(obj.b, 20)
