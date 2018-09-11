@@ -29,7 +29,7 @@ from ajson import AJson, ASerializer
 class Restaurant:
     location:str   # @aj(groups=["public","admin"])
     tables: int  # @aj(groups=["public","admin"])
-    owner: str  # @aj(groups=["admin"])
+    owner: str  # @aj(groups=["admin"], name=ownerName)
     def __init__(self, location, tables, owner):
         self.location = location
         self.tables = tables
@@ -40,7 +40,7 @@ restaurant = Restaurant("Manhattan", 30, "John Smith")
 print(serializer.serialize(restaurant, groups=["public"])) 
 # {"location": "Manhattan", "tables": 30}
 print(serializer.serialize(restaurant, groups=["admin"])) 
-#  {"location": "Manhattan", "tables": 30, "owner": "John Smith"}
+#  {"location": "Manhattan", "tables": 30, "ownerName": "John Smith"}
 ```
 
 ##### Rename Attributes With "Name"
