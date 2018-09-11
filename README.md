@@ -185,12 +185,10 @@ print(restaurant.customer_list[0].name)  # "Dani"
 1. Unserialize a Dict with types (Dict[str:MyObject]) is not supported, it will just unserialize it as a dict.
 
 2. Unserialize a Dict with key different than a string (Dict[int:str])
-
-3. Properties serialization is not supported yet.
  
 #### Documentation
 
-Documentation and additional information is available [here](https://jorgegarciairazabal.github.io/ajson/)
+Documentation and additional information [here](https://jorgegarciairazabal.github.io/ajson/)
 
 #### Contributing
 
