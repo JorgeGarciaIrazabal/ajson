@@ -6,21 +6,21 @@ AJson is a serializer based on annotations that gives a lot of flexibility and c
 [![codecov](https://codecov.io/gh/JorgeGarciaIrazabal/ajson/branch/master/graph/badge.svg)](https://codecov.io/gh/JorgeGarciaIrazabal/ajson)
 
 
-### Install: (python3.6 or greater)
+### Install: (python3.6 or higher)
 
 `pip install ajson`
 
 #### Motivation:
 
 There are amazing serialization libraries like [jsonpickle](https://jsonpickle.github.io/), and even more when the serialized object is meant to be used in python too. 
-But there are no libraries that let you filter the fields to serialize or modify the names of the attributes, which are features super useful, mainly for http APIs
+But there are no libraries that let you filter fields to serialize or modify the names of the attributes. These features are super useful, mainly for http APIs
 
 This library allows you to have those features in a simple and intuitive way.
 
 #### Serialize Examples
 
-###### Simple Serialization With "Groups"
-If you want to filter some sensible data in some scenarios, you can define `groups` per each attribute to control what is serialize and what is not
+##### Simple Serialization With "Groups"
+If you want to filter some sensible data in some scenarios, you can define `groups` per attribute to control what is serialized and what is not.
 
 ```python
 from ajson import AJson, ASerializer
@@ -43,7 +43,7 @@ print(serializer.serialize(restaurant, groups=["admin"]))
 #  {"location": "Manhattan", "tables": 30, "owner": "John Smith"}
 ```
 
-###### Rename Attributes With "Name"
+##### Rename Attributes With "Name"
 
 ```python
 from ajson import AJson
@@ -65,7 +65,7 @@ print(serializer.serialize(customer))
 # {"firstName": "John", "lastName": "Smith", "email": "john.smith@something.com"}
 ```
 
-###### Nested Objects With Groups And Names
+##### Nested Objects With Groups And Names
 
 ```python
 from typing import List
@@ -77,7 +77,7 @@ class Customer:
     name: str  # @aj(name=firstName, groups=["public"])
     primary_email: str
     '''
-    You can also add the annotation in a multiline docstr
+    You can also add the annotation in a multi-line docstr
     @aj(
         name=email,
         groups=["public"]
@@ -121,7 +121,7 @@ print(ASerializer().to_dict(restaurant, groups=["public", "with_customers"]))
 
 #### Unserialize Examples
 
-###### UnSerialization With Custom Names
+##### UnSerialization With Custom Names
 ```python
 from ajson import AJson, ASerializer
 
@@ -139,7 +139,7 @@ print(customer.last_name)  # "Smith"
 print(customer.primary_email)  # "john.smith@something.com"
 ```
 
-###### Nested Objects
+##### Nested Objects
 
 ```python
 from typing import List, Optional
@@ -180,7 +180,7 @@ print(restaurant.owner)  # "John Smith"
 print(restaurant.customer_list[0].name)  # "Dani"
 ```
 
-###### Known Limitations
+##### Known Limitations
 
 1. Unserialize a Dict with types (Dict[str:MyObject]) is not supported, it will just unserialize it as a dict.
 
