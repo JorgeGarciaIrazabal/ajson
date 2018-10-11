@@ -23,9 +23,12 @@ class ASerializer:
     >>> serializer.serialize(nested_dict)
     "{"d1": {"d2": "..." }}"
     """
-    def __init__(self, max_depth=15):
+
+    def __init__(self, max_depth=15, default_datetime_format=ISO_FORMAT):
         self.max_depth: int = max_depth
-        self._handlers: Dict[Type, Handler] = {}
+        self.default_datetime_format: str = default_datetime_format
+        self._serialize_handlers: Dict[Type, Handler] = {}
+        self._unserialize_handlers: Dict[Type, Handler] = {}
 
     def add_serialize_handler(self, _type: Type, handler: Handler):
         """
@@ -38,7 +41,20 @@ class ASerializer:
         >>> serializer.serialize(-6)
         '0'
         """
-        self._handlers[_type] = handler
+        self._serialize_handlers[_type] = handler
+
+    def add_unserialize_handler(self, _type: Type, handler: Handler):
+        """
+        Adds a handler for a specific type to modify the way it should be serialize
+
+        >>> serializer = ASerializer()
+        >>> serializer.add_unserialize_handler(int, lambda obj, *args: obj if obj > 0 else 0) # negative ints return 0
+        >>> serializer.unserialize(5)
+        '5'
+        >>> serializer.unserialize(-6)
+        '0'
+        """
+        self._unserialize_handlers[_type] = handler
 
     def serialize(self, obj, groups: Optional[List[str]] = None) -> str:
         """
@@ -94,9 +110,9 @@ class ASerializer:
         depth += 1
         if depth > self.max_depth:
             return '...'
-        for class_ in self._handlers:
+        for class_ in self._serialize_handlers:
             if isinstance(obj, class_):
-                return self._handlers[class_](obj, groups, attr_report)
+                return self._serialize_handlers[class_](obj, groups, attr_report)
         if obj is None:
             return None
         elif isinstance(obj, (int, str, float)):
@@ -136,10 +152,9 @@ class ASerializer:
         return serialized_dict
 
     def __datetime_handler(self, obj: datetime, attr_report: Optional[_AttrReport] = None) -> str:
-        if attr_report is None:
-            return obj.isoformat()
+        datetime_format = self.get_date_time_format(attr_report)
 
-        return obj.strftime(attr_report.datetime_format)
+        return obj.strftime(datetime_format)
 
     def __object_handler(self, obj: object, groups: Optional[List[str]], depth):
         class_report = JsonTypeReports().reports.get(obj.__class__, None)
@@ -209,6 +224,10 @@ class ASerializer:
 
     def _from_dict_recursive(self, dict_obj: Any, _type: Optional[Type] = None, attr_report: _AttrReport = None,
                              *init_args_array, **init_kargs) -> Any:
+
+        for class_ in self._unserialize_handlers:
+            if isinstance(dict_obj, class_):
+                return self._unserialize_handlers[class_](dict_obj, attr_report)
         if isinstance(dict_obj, (list, tuple, set)):
             return self._unserialize_list(_type, dict_obj, init_args_array, init_kargs)
         elif isinstance(dict_obj, dict):
@@ -238,14 +257,20 @@ class ASerializer:
 
     def _unserialize_str_or_date(self, attr_report: _AttrReport, dict_obj: Any) -> Any:
         # check if it is a date time
-        if attr_report is not None:
-            datetime_format = attr_report.datetime_format
-        else:
-            datetime_format = ISO_FORMAT
+        datetime_format = self.get_date_time_format(attr_report)
         try:
             return datetime.strptime(dict_obj, datetime_format)
         except ValueError:
             return dict_obj
+
+    def get_date_time_format(self, attr_report):
+        if attr_report is not None:
+            datetime_format = attr_report.datetime_format \
+                if attr_report.datetime_format is not None \
+                else self.default_datetime_format
+        else:
+            datetime_format = self.default_datetime_format
+        return datetime_format
 
     def _unserialize_list(self, _type: Optional[Type], dict_obj: Any, init_args_array, init_kargs) -> Any:
         if _type is None:

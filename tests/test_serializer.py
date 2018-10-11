@@ -68,10 +68,15 @@ class TestSerialization(unittest.TestCase):
             datetime.now() - parsed_datetime
         )
 
-    def test_handler_modify_specific_types(self):
+    def test_serialize_handler_modify_specific_types(self):
         self.serializer.add_serialize_handler(datetime, lambda d, g, a: "test")
         date = datetime.now()
         date_dict = self.serializer.to_dict({"datetime": date})
+        self.assertEqual(date_dict["datetime"], "test")
+
+    def test_unserialize_handler_modify_specific_types(self):
+        self.serializer.add_unserialize_handler(str, lambda d, a: "test")
+        date_dict = self.serializer.from_dict({"datetime": "2013-12-31T10:20:34Z"})
         self.assertEqual(date_dict["datetime"], "test")
 
     # Unserialize

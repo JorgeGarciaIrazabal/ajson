@@ -6,7 +6,7 @@ from typeguard import check_type
 
 from ajson.singleton import Singleton
 
-ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
+ISO_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 
 
 class AJsonAnnotationParseError(Exception):
@@ -25,7 +25,7 @@ class _AttrReport(object):
     def __init__(self, attribute_name: str, hint: Optional[Type], **kwargs):
         self.groups: Optional[Set[str]] = kwargs.get('groups', None)
         self.name: str = kwargs.get('name', attribute_name)
-        self.datetime_format: str = kwargs.get('d_format', ISO_FORMAT)  # iso format
+        self.datetime_format: str = kwargs.get('d_format', None)  # iso format
         self.attribute_name: str = attribute_name
         self.required: str = kwargs.get('required', 'false')
 
