@@ -22,7 +22,7 @@ class TestAJsonDecorator(unittest.TestCase):
         self.assertIn(AJDA, reports)
         self.assertEqual(len(reports.keys()), 1)
         self.assertEqual(reports[AJDA].get("a").groups, {"admin"})
-        self.assertEqual(reports[AJDA].get("a").datetime_format, ISO_FORMAT)
+        self.assertEqual(reports[AJDA].get("a").datetime_format, None)
         self.assertEqual(reports[AJDA].get("a").name, "a")
 
     def test_annotation_class_creates_report_with_group_and_name(self):
@@ -33,7 +33,7 @@ class TestAJsonDecorator(unittest.TestCase):
 
         reports = JsonTypeReports().reports
         self.assertIn(AJDB, reports)
-        self.assertEqual(reports[AJDB].get("a").datetime_format, ISO_FORMAT)
+        self.assertEqual(reports[AJDB].get("a").datetime_format, None)
         self.assertEqual(reports[AJDB].get("a").name, "annotation")
 
     def test_annotation_class_creates_report_all_parameters(self):
