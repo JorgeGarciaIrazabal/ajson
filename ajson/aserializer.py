@@ -227,7 +227,8 @@ class ASerializer:
 
         for class_ in self._unserialize_handlers:
             if isinstance(dict_obj, class_):
-                return self._unserialize_handlers[class_](dict_obj, attr_report)
+                dict_obj = self._unserialize_handlers[class_](dict_obj, attr_report)
+
         if isinstance(dict_obj, (list, tuple, set)):
             return self._unserialize_list(_type, dict_obj, init_args_array, init_kargs)
         elif isinstance(dict_obj, dict):
